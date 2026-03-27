@@ -516,7 +516,7 @@ def test_compare_uniaxial_with_generic_section_reinforcement(  # noqa: PLR0915
 
     # Compare GenericSection and ShellSection
     assert math.isclose(
-        generic_strain[0],
+        generic_strain.to_list()[0],
         shell_strain[0],
         rel_tol=1e-4,
     )
