@@ -7,13 +7,12 @@ import typing as t
 import warnings
 
 import numpy as np
-from numpy.typing import ArrayLike, NDArray
+from numpy.typing import ArrayLike
 from scipy.linalg import lu_factor, lu_solve
 from shapely import MultiPolygon
 from shapely.ops import unary_union
 
 import structuralcodes.core._section_results as s_res
-from structuralcodes.core.base import Section, SectionCalculator
 from structuralcodes.geometry import (
     CompoundGeometry,
     PointGeometry,
@@ -21,6 +20,8 @@ from structuralcodes.geometry import (
 )
 from structuralcodes.materials.basic import ElasticMaterial
 
+from ..core.base import Section, SectionCalculator
+from ..core.errors import InformationWarning, NoConvergenceWarning
 from .section_integrators import SectionIntegrator, integrator_factory
 
 
@@ -124,7 +125,7 @@ class GenericSectionCalculator(SectionCalculator):
         # Mesh size used for Fibre integrator
         self.mesh_size = kwargs.get('mesh_size', 0.01)
         # triangulated_data used for Fibre integrator
-        self.triangulated_data = None
+        self.integration_data = None
         # Maximum and minimum axial load
         self._n_max = None
         self._n_min = None
@@ -148,10 +149,11 @@ class GenericSectionCalculator(SectionCalculator):
         if isinstance(polygon, MultiPolygon):
             gp.perimeter = 0.0
             warnings.warn(
-                'Perimiter computation for a multi polygon is not defined.'
+                'Perimiter computation for a multi polygon is not defined.',
+                category=InformationWarning,
             )
-
-        gp.perimeter = polygon.exterior.length
+        else:
+            gp.perimeter = polygon.exterior.length
 
         # Computation of area: this is taken directly from shapely
         gp.area = self.section.geometry.area
@@ -205,10 +207,13 @@ class GenericSectionCalculator(SectionCalculator):
                 sy,
                 iyy,
                 iyz,
-                tri,
+                integration_data,
             ) = self.integrator.integrate_strain_response_on_geometry(
                 geometry,
                 [0, 1, 0],
+                # even if tempted we should not pass integration data here,
+                # since the materials are different!
+                integration_data=None,
                 mesh_size=self.mesh_size,
             )
             # Change sign due to moment sign convention
@@ -223,7 +228,7 @@ class GenericSectionCalculator(SectionCalculator):
             ) = self.integrator.integrate_strain_response_on_geometry(
                 geometry,
                 [0, 0, -1],
-                tri=tri,
+                integration_data=integration_data,
                 mesh_size=self.mesh_size,
             )
             # Change sign due to moment sign convention
@@ -369,9 +374,14 @@ class GenericSectionCalculator(SectionCalculator):
         return (y_n, y_p, strain)
 
     def find_equilibrium_fixed_pivot(
-        self, geom: CompoundGeometry, n: float, yielding: bool = False
+        self,
+        geom: CompoundGeometry,
+        n: float,
+        yielding: bool = False,
+        max_iter: int = 100,
+        tol: float = 1e-2,
     ) -> t.List[float]:
-        """Find the equilibrium changing curvature fixed a pivot.
+        r"""Find the equilibrium changing curvature fixed a pivot.
         The algorithm uses bisection algorithm between curvature
         of balanced failure and 0. Selected the pivot point as
         the top or the bottom one, the neutral axis is lowered or
@@ -381,15 +391,19 @@ class GenericSectionCalculator(SectionCalculator):
             geom (CompoundGeometry): A geometry in the rotated reference
                 system.
             n (float): Value of external axial force needed to be equilibrated.
-            yielding (bool): ...
+            yielding (bool): If true, the yielding strain is used as the
+                ultimate one, therefore finding yielding strength and not
+                ultimate strength
+            max_iter (int): the maximum number of iterations in the iterative
+                process (default = 100).
+            tol (float): the tolerance for convergence test in terms of
+                $\deltaN_a - \deltaN_b$ (default = 1e-2).
 
         Returns:
             List(float): 3 floats: Axial strain at (0,0), and curvatures of y*
             and z* axes. Note that being uniaxial bending,
             curvature along z* is 0.0.
         """
-        # Number of maximum iteration for the bisection algorithm
-        ITMAX = 100
         # 1. Start with a balanced failure: this is found from all ultimate
         # strains for all materials, checking the minimum curvature value
         y_n, y_p, strain = self.get_balanced_failure_strain(geom, yielding)
@@ -400,13 +414,16 @@ class GenericSectionCalculator(SectionCalculator):
             n_int,
             _,
             _,
-            tri,
+            integration_data,
         ) = self.integrator.integrate_strain_response_on_geometry(
-            geom, strain, tri=self.triangulated_data, mesh_size=self.mesh_size
+            geom,
+            strain,
+            integration_data=self.integration_data,
+            mesh_size=self.mesh_size,
         )
         # save the triangulation data
-        if self.triangulated_data is None and tri is not None:
-            self.triangulated_data = tri
+        if self.integration_data is None and integration_data is not None:
+            self.integration_data = integration_data
 
         # Check if there is equilibrium with this strain distribution
         chi_a = strain[1]
@@ -426,11 +443,11 @@ class GenericSectionCalculator(SectionCalculator):
             strain_pivot = eps_n
         eps_0 = strain_pivot - chi_b * pivot
         n_int, _, _, _ = self.integrator.integrate_strain_response_on_geometry(
-            geom, [eps_0, chi_b, 0], tri=self.triangulated_data
+            geom, [eps_0, chi_b, 0], integration_data=self.integration_data
         )
         dn_b = n_int - n
         it = 0
-        while (abs(dn_a - dn_b) > 1e-2) and (it < ITMAX):
+        while (abs(dn_a - dn_b) > tol) and (it < max_iter):
             chi_c = (chi_a + chi_b) / 2.0
             eps_0 = strain_pivot - chi_c * pivot
             (
@@ -439,7 +456,7 @@ class GenericSectionCalculator(SectionCalculator):
                 _,
                 _,
             ) = self.integrator.integrate_strain_response_on_geometry(
-                geom, [eps_0, chi_c, 0], tri=self.triangulated_data
+                geom, [eps_0, chi_c, 0], integration_data=self.integration_data
             )
             dn_c = n_int - n
             if dn_c * dn_a < 0:
@@ -449,47 +466,55 @@ class GenericSectionCalculator(SectionCalculator):
                 chi_a = chi_c
                 dn_a = dn_c
             it += 1
-        if it >= ITMAX:
-            s = f'Last iteration reached a unbalance of {dn_c}'
-            raise ValueError(f'Maximum number of iterations reached.\n{s}')
+        if it >= max_iter:
+            msg = 'GenericSectionCalculator::find_equilibrium_fixed_pivot\n\t'
+            msg += 'Maximum number of iterations reached.'
+            msg += f' Last iteration reached a unbalance of {dn_c:.3e}'
+            warnings.warn(
+                message=msg,
+                category=NoConvergenceWarning,
+            )
         # Found equilibrium
         # Return the strain distribution
         return [eps_0, chi_c, 0]
 
-    def _prefind_range_curvature_equilibrium(
+    def _quick_exponential_find(
         self,
-        geom: CompoundGeometry,
-        n: float,
-        curv: float,
-        eps_0_a: float,
-        dn_a: float,
+        geom,
+        n,
+        curv,
+        max_iter,
+        max_restart_attempts,
+        eps_0_a,
+        dn_a,
+        sign,
     ):
-        """Perfind range where the curvature equilibrium is located.
-
-        This algorithms quickly finds a position of NA that guaranteed the
-        existence of at least one zero in the function dn vs. curv in order to
-        apply the bisection algorithm.
-        """
-        ITMAX = 20
-        MAXRESTATTEMPTS = 20
-        sign = -1 if dn_a > 0 else 1
+        restarts = 0
         found = False
         it = 0
-        restarts = 0
         delta = 1e-3
         # Use a growth factor for an exponential finding
         r = 2.0
         diverging = False
         diverging_steps = 0
-        while not found and it < ITMAX and restarts < MAXRESTATTEMPTS:
-            eps_0_b = eps_0_a + sign * delta * r ** (it)
+        while not found and it < max_iter and restarts < max_restart_attempts:
+            # If there has been at least 20% of maximum restart attempts,
+            # slow down the exponent growth to linear. This is helpful to
+            # solve cases where the solution is close to the limit axial
+            # load
+            exponent = (
+                it if restarts <= int(0.2 * max_restart_attempts) else 1.0
+            )
+            eps_0_b = eps_0_a + sign * delta * r ** (exponent)
             (
                 n_int,
                 _,
                 _,
                 _,
             ) = self.integrator.integrate_strain_response_on_geometry(
-                geom, [eps_0_b, curv, 0], tri=self.triangulated_data
+                geom,
+                [eps_0_b, curv, 0],
+                integration_data=self.integration_data,
             )
             dn_b = n_int - n
             if dn_a * dn_b < 0:
@@ -501,25 +526,165 @@ class GenericSectionCalculator(SectionCalculator):
                 if diverging:
                     # Count for how many steps we are diverging
                     diverging_steps += 1
-                # If we are consistently diverging for more than 10 steps,
-                # Restart the process with a small delta
-                if diverging_steps > 10:
+                # If we are consistently diverging for more than 5 steps,
+                # Restart the process with a smaller delta
+                if diverging_steps > 5:
                     delta /= 2
                     it = 0
                     restarts += 1
                     diverging = False
                     diverging_steps = 0
             it += 1
-        if it >= ITMAX and not found:
-            s = f'Last iteration reached a unbalance of: \
-                dn_a = {dn_a} dn_b = {dn_b})'
-            raise ValueError(f'Maximum number of iterations reached.\n{s}')
+        return eps_0_b, dn_b, it, found
+
+    def _slow_linear_find(
+        self,
+        geom,
+        n,
+        curv,
+        max_iter,
+        eps_0_a,
+        dn_a,
+        sign,
+    ):
+        found = False
+        it = 0
+        delta = abs(eps_0_a) / (max_iter * 10)
+        while True:
+            eps_0_b = eps_0_a + sign * delta * (it + 1)
+            (
+                n_int,
+                _,
+                _,
+                _,
+            ) = self.integrator.integrate_strain_response_on_geometry(
+                geom, [eps_0_b, curv, 0], tri=self.triangulated_data
+            )
+            dn_b = n_int - n
+            if dn_a * dn_b < 0:
+                found = True
+                break
+            it += 1
+            if it >= max_iter * 10:
+                break
+        return eps_0_b, dn_b, it, found
+
+    def _brute_force_find_minimum(
+        self,
+        geom,
+        n,
+        curv,
+        eps_0_a,
+        dn_a,
+        sign,
+    ):
+        found = False
+        suffix = ''
+        eps_0_a_attempt = eps_0_a
+        eps_0_b_attempt = eps_0_a + abs(eps_0_a) * sign
+        for i in range(10):
+            eps_0_attempts = np.linspace(eps_0_a_attempt, eps_0_b_attempt, 100)
+            dn_attempts = np.zeros_like(eps_0_attempts)
+            for j in range(len(eps_0_attempts)):
+                (
+                    n_int,
+                    _,
+                    _,
+                    _,
+                ) = self.integrator.integrate_strain_response_on_geometry(
+                    geom,
+                    [eps_0_attempts[j], curv, 0],
+                    tri=self.triangulated_data,
+                )
+                dn_attempts[j] = n_int - n
+            if dn_a > 0:
+                idx_min = np.argmin(dn_attempts)
+            else:
+                idx_min = np.argmax(dn_attempts)
+            eps_0_b = eps_0_attempts[idx_min]
+            dn_b = dn_attempts[idx_min]
+            eps_0_a_attempt = eps_0_attempts[max(idx_min - 2, 0)]
+            eps_0_b_attempt = eps_0_attempts[
+                min(idx_min + 2, len(eps_0_attempts))
+            ]
+            # Check if it is on the opposite side
+            if dn_a * dn_b < 0:
+                found = True
+                break
+
+        if not found:
+            # It is impossibile to find a solution for the given case
+            # The best solution we have is dn_b
+            suffix = (
+                '(No solution can be found because it seems dN never '
+                ' becomes of opposite sign).'
+                '\n\tThe best that we have found is with an unbalance of'
+                f' {dn_b:.3e} for eps_0_b = {eps_0_b:e}.'
+            )
+        return eps_0_b, dn_b, found, suffix
+
+    def _prefind_range_curvature_equilibrium(
+        self,
+        geom: CompoundGeometry,
+        n: float,
+        curv: float,
+        eps_0_a: float,
+        dn_a: float,
+        max_iter: int = 20,
+        max_restart_attemps: int = 20,
+    ):
+        """Perfind range where the curvature equilibrium is located.
+
+        This algorithms quickly finds a position of NA that guaranteed the
+        existence of at least one zero in the function dn vs. curv in order to
+        apply the bisection algorithm.
+        """
+        sign = -1 if dn_a > 0 else 1
+
+        eps_0_b, dn_b, it, found = self._quick_exponential_find(
+            geom, n, curv, max_iter, max_restart_attemps, eps_0_a, dn_a, sign
+        )
+
+        # As a further attempt, try going with small increments/decrements up
+        # to when it changes sign
+
+        if it >= max_iter and not found:
+            eps_0_b, dn_b, it, found = self._slow_linear_find(
+                geom, n, curv, max_iter, eps_0_a, dn_a, sign
+            )
+
+        # As a final attempt, try to compute for a range a certain size
+        # respect eps_0_a and compute dn for each one of them, find the
+        # minimum hoping it is on the opposite side of dn_a.
+
+        if it >= max_iter and not found:
+            eps_0_b, dn_b, found, suffix = self._brute_force_find_minimum(
+                geom, n, curv, eps_0_a, dn_a, sign
+            )
+
+        if it >= max_iter and not found:
+            msg = (
+                'GenericSectionCalculator::'
+                '_prefind_range_curvature_equilibrium\n\t'
+                'Maximum number of iterations reached.'
+                f' Last iteration reached a unbalance of {dn_b:.3e} {suffix}'
+            )
+            warnings.warn(
+                message=msg,
+                category=NoConvergenceWarning,
+            )
         return (eps_0_b, dn_b)
 
     def find_equilibrium_fixed_curvature(
-        self, geom: CompoundGeometry, n: float, curv: float, eps_0: float
+        self,
+        geom: CompoundGeometry,
+        n: float,
+        curv: float,
+        eps_0: float,
+        max_iter: int = 100,
+        tol: float = 1e-2,
     ) -> t.Tuple[float, float, float]:
-        """Find strain profile with equilibrium with fixed curvature.
+        r"""Find strain profile with equilibrium with fixed curvature.
 
         Given curvature and external axial force, find the strain profile that
         makes internal and external axial force in equilibrium.
@@ -529,14 +694,16 @@ class GenericSectionCalculator(SectionCalculator):
             n (float): The external axial load.
             curv (float): The value of curvature.
             eps_0 (float): A first attempt for neutral axis position.
+            max_iter (int): the maximum number of iterations in the iterative
+                process (default = 100).
+            tol (float): the tolerance for convergence test in terms of
+                $\deltaN_a - \deltaN_b$. (default = 1e-2)
 
         Returns:
             Tuple(float, float, float): The axial strain and the two
             curvatures.
         """
         # Useful for Moment Curvature Analysis
-        # Number of maximum iteration for the bisection algorithm
-        ITMAX = 100
         # Start from previous position of N.A.
         eps_0_a = eps_0
         # find internal axial force by integration
@@ -544,12 +711,12 @@ class GenericSectionCalculator(SectionCalculator):
             n_int,
             _,
             _,
-            tri,
+            integration_data,
         ) = self.integrator.integrate_strain_response_on_geometry(
-            geom, [eps_0, curv, 0], tri=self.triangulated_data
+            geom, [eps_0, curv, 0], integration_data=self.integration_data
         )
-        if self.triangulated_data is None and tri is not None:
-            self.triangulated_data = tri
+        if self.integration_data is None and integration_data is not None:
+            self.integration_data = integration_data
         dn_a = n_int - n
         # It may occur that dn_a is already almost zero (in eqiulibrium)
         if abs(dn_a) <= 1e-2:
@@ -560,7 +727,7 @@ class GenericSectionCalculator(SectionCalculator):
         )
         # Found a range within there is the solution, apply bisection
         it = 0
-        while (abs(dn_a - dn_b) > 1e-2) and (it < ITMAX):
+        while (abs(dn_a - dn_b) > tol) and (it < max_iter):
             eps_0_c = (eps_0_a + eps_0_b) / 2
             (
                 n_int,
@@ -568,7 +735,9 @@ class GenericSectionCalculator(SectionCalculator):
                 _,
                 _,
             ) = self.integrator.integrate_strain_response_on_geometry(
-                geom, [eps_0_c, curv, 0], tri=self.triangulated_data
+                geom,
+                [eps_0_c, curv, 0],
+                integration_data=self.integration_data,
             )
             dn_c = n_int - n
             if dn_a * dn_c < 0:
@@ -578,10 +747,14 @@ class GenericSectionCalculator(SectionCalculator):
                 dn_a = dn_c
                 eps_0_a = eps_0_c
             it += 1
-        if it >= ITMAX:
-            s = f'Last iteration reached a unbalance of: \
-                dn_c = {dn_c}'
-            raise ValueError(f'Maximum number of iterations reached.\n{s}')
+        if it >= max_iter:
+            msg = 'GenericSectionCalculator::find_equilibrium_fixed_curvature'
+            msg += '\n\tMaximum number of iterations reached. '
+            msg += f' Last iteration reached a unbalance of {dn_c:.3e}'
+            warnings.warn(
+                message=msg,
+                category=NoConvergenceWarning,
+            )
         return eps_0_c, curv, 0
 
     def calculate_limit_axial_load(self):
@@ -597,20 +770,22 @@ class GenericSectionCalculator(SectionCalculator):
         eps_p = strain[0] + strain[1] * y_p
         eps_n = strain[0] + strain[1] * y_n
 
-        n_min, _, _, tri = (
+        n_min, _, _, integration_data = (
             self.integrator.integrate_strain_response_on_geometry(
                 self.section.geometry,
                 [eps_n, 0, 0],
-                tri=self.triangulated_data,
+                integration_data=self.integration_data,
                 mesh_size=self.mesh_size,
             )
         )
         n_max, _, _, _ = self.integrator.integrate_strain_response_on_geometry(
-            self.section.geometry, [eps_p, 0, 0], tri=tri
+            self.section.geometry,
+            [eps_p, 0, 0],
+            integration_data=integration_data,
         )
 
-        if self.triangulated_data is None and tri is not None:
-            self.triangulated_data = tri
+        if self.integration_data is None and integration_data is not None:
+            self.integration_data = integration_data
         return n_min, n_max
 
     @property
@@ -644,10 +819,10 @@ class GenericSectionCalculator(SectionCalculator):
             error_str += f'n_min = {self.n_min} / n_max = {self.n_max}'
             raise ValueError(error_str)
 
-    def _rotate_triangulated_data(self, theta: float):
+    def _rotate_integration_data(self, theta: float):
         """Rotate triangulated data of angle theta."""
-        rotated_triangulated_data = []
-        for tr in self.triangulated_data:
+        rotated_integration_data = []
+        for tr in self.integration_data:
             T = np.array(
                 [
                     [np.cos(theta), -np.sin(theta)],
@@ -656,16 +831,28 @@ class GenericSectionCalculator(SectionCalculator):
             )
             coords = np.vstack((tr[0], tr[1]))
             coords_r = T @ coords
-            rotated_triangulated_data.append(
+            rotated_integration_data.append(
                 (coords_r[0, :], coords_r[1, :], tr[2], tr[3])
             )
-        self.triangulated_data = rotated_triangulated_data
+        self.integration_data = rotated_integration_data
+
+    @t.overload
+    def integrate_strain_profile(
+        self, strain: ArrayLike, integrate: t.Literal['stress'] = 'stress'
+    ) -> s_res.IntegrateStrainForceResult: ...
+
+    @t.overload
+    def integrate_strain_profile(
+        self, strain: ArrayLike, integrate: t.Literal['modulus']
+    ) -> s_res.IntegrateStrainStiffnessResult: ...
 
     def integrate_strain_profile(
         self,
         strain: ArrayLike,
         integrate: t.Literal['stress', 'modulus'] = 'stress',
-    ) -> t.Union[t.Tuple[float, float, float], NDArray]:
+    ) -> t.Union[
+        s_res.IntegrateStrainForceResult, s_res.IntegrateStrainStiffnessResult
+    ]:
         """Integrate a strain profile returning stress resultants or tangent
         section stiffness matrix.
 
@@ -680,16 +867,19 @@ class GenericSectionCalculator(SectionCalculator):
                 tangent section stiffness matrix (default is 'stress').
 
         Returns:
-            Union(Tuple(float, float, float),NDArray): N, My and Mz when
-            `integrate='stress'`, or a numpy array representing the stiffness
-            matrix then `integrate='modulus'`.
+            Returns:
+            IntegrateStrainForcesResult
+                When ``integrate="stress"``.
+
+            IntegrateStrainStiffnessResult
+                When ``integrate="modulus"``.
 
         Examples:
             result = self.integrate_strain_profile(strain,integrate='modulus')
-            # `result` will be the tangent stiffness matrix (a 3x3 numpy array)
+            # `result` will contain the tangent stiffness matrix (a 3x3 array)
 
             result = self.integrate_strain_profile(strain)
-            # `result` will be a tuple containing section forces (N, My, Mz)
+            # `result` will contain section forces (N, My, Mz)
 
         Raises:
             ValueError: If a unkown value is passed to the `integrate`
@@ -699,28 +889,42 @@ class GenericSectionCalculator(SectionCalculator):
             geo=self.section.geometry,
             strain=strain,
             integrate=integrate,
-            tri=self.triangulated_data,
+            integration_data=self.integration_data,
             mesh_size=self.mesh_size,
         )
 
         # Save triangulation data for future use
-        if self.triangulated_data is None and result[-1] is not None:
-            self.triangulated_data = result[-1]
+        if self.integration_data is None and result[-1] is not None:
+            self.integration_data = result[-1]
 
         # manage the returning from integrate_strain_response_on_geometry:
         # this function returns one of the two:
-        # a. float, float, float, tri (i.e. N, My, Mz, tri)
-        # b. (NDArray, tri) (i.e. section stiff matrix, tri)
+        # a. float, float, float, integration_data
+        #       (i.e. N, My, Mz, integration_data)
+        # b. (NDArray, integration_data)
+        #       (i.e. section stiff matrix, integration_data)
         # We need to return only forces or stifness
-        # (without triangultion data)
-        if len(result) == 2:
-            return result[0]
-        return result[:-1]
+        # (without triangulation data)
+        if integrate == 'stress':
+            return s_res.IntegrateStrainForceResult(
+                eps_a=strain[0],
+                chi_y=strain[1],
+                chi_z=strain[2],
+                n=result[0],
+                m_y=result[1],
+                m_z=result[2],
+                section=self.section,
+            )
+        if integrate == 'modulus':
+            return s_res.IntegrateStrainStiffnessResult(tangent=result[0])
+        raise Exception(
+            'integrate argument not valid. Valid options: stress and modulus'
+        )
 
     def calculate_bending_strength(
-        self, theta=0, n=0
+        self, theta=0, n=0, max_iter: int = 100, tol: float = 1e-2
     ) -> s_res.UltimateBendingMomentResults:
-        """Calculates the bending strength for given inclination of n.a. and
+        r"""Calculates the bending strength for given inclination of n.a. and
         axial load.
 
         Arguments:
@@ -728,6 +932,10 @@ class GenericSectionCalculator(SectionCalculator):
                 radians, default = 0.
             n (float): Axial load applied to the section (+: tension, -:
                 compression), default = 0.
+            max_iter (int): the maximum number of iterations in the iterative
+                bisection process (default = 100).
+            tol (float): the tolerance for convergence test in terms of
+                $\deltaN_a - \deltaN_b$ (default = 1e-2
 
         Returns:
             UltimateBendingMomentResults: The results from the calculation.
@@ -738,16 +946,20 @@ class GenericSectionCalculator(SectionCalculator):
         # Compute the bending strength with the bisection algorithm
         # Rotate the section of angle theta
         rotated_geom = self.section.geometry.rotate(-theta)
-        if self.triangulated_data is not None:
+        if self.integration_data is not None:
             # Rotate also triangulated data!
-            self._rotate_triangulated_data(-theta)
+            self._rotate_integration_data(-theta)
 
         # Find the strain distribution corresponding to failure and equilibrium
         # with external axial force
-        strain = self.find_equilibrium_fixed_pivot(rotated_geom, n)
+        strain = self.find_equilibrium_fixed_pivot(
+            rotated_geom, n, max_iter=max_iter, tol=tol
+        )
         # Compute the internal forces with this strain distribution
         N, My, Mz, _ = self.integrator.integrate_strain_response_on_geometry(
-            geo=rotated_geom, strain=strain, tri=self.triangulated_data
+            geo=rotated_geom,
+            strain=strain,
+            integration_data=self.integration_data,
         )
 
         # Rotate back to section CRS TODO Check
@@ -755,9 +967,9 @@ class GenericSectionCalculator(SectionCalculator):
             [[np.cos(theta), -np.sin(theta)], [np.sin(theta), np.cos(theta)]]
         )
         M = T @ np.array([[My], [Mz]])
-        if self.triangulated_data is not None:
+        if self.integration_data is not None:
             # Rotate back also triangulated data!
-            self._rotate_triangulated_data(theta)
+            self._rotate_integration_data(theta)
         # Rotate also curvature!
         strain_rotated = T @ np.array([[strain[1]], [strain[2]]])
 
@@ -770,8 +982,95 @@ class GenericSectionCalculator(SectionCalculator):
         res.eps_a = strain[0]
         res.m_y = M[0, 0]
         res.m_z = M[1, 0]
+        res.section = self.section
 
         return res
+
+    def _prepare_chi_array(
+        self,
+        rotated_geom,
+        n,
+        num_pre_yield,
+        num_post_yield,
+        chi_first,
+        max_iter,
+        tol,
+    ):
+        # Find ultimate curvature from the strain distribution
+        # corresponding to failure and equilibrium with external axial
+        # force
+        # This coul not converge, let's catch the warning to customize
+        # the message
+        with warnings.catch_warnings(record=True) as w:
+            warnings.simplefilter('always', NoConvergenceWarning)
+            strain = self.find_equilibrium_fixed_pivot(
+                rotated_geom, n, max_iter=max_iter, tol=tol
+            )
+            chi_ultimate = strain[1]
+        if w:
+            # I should expect only one warning of this category
+            warn = w[0]
+            if issubclass(warn.category, NoConvergenceWarning):
+                new_msg = (
+                    f'\nGenericSectionCalculator::calculate_moment_curvature'
+                    f'\n\tNo convergence during computation of ultimate'
+                    f' curvature. Please check results properly.\n'
+                    f'{warn.message}'
+                )
+                warnings.warn(new_msg, NoConvergenceWarning)
+        # Find the yielding curvature
+        # This could not converge, let0's catch the warning to customize
+        # the message
+        with warnings.catch_warnings(record=True) as w:
+            warnings.simplefilter('always', NoConvergenceWarning)
+            strain = self.find_equilibrium_fixed_pivot(
+                rotated_geom, n, yielding=True, max_iter=max_iter, tol=tol
+            )
+            chi_yield = strain[1]
+        if w:
+            # I should expect only one warning of this category
+            warn = w[0]
+            if issubclass(warn.category, NoConvergenceWarning):
+                new_msg = (
+                    f'\nGenericSectionCalculator::calculate_moment_curvature'
+                    f'\n\tNo convergence during computation of yielding'
+                    f' curvature. Please check results properly.\n'
+                    f'{warn.message}'
+                )
+                warnings.warn(new_msg, NoConvergenceWarning)
+
+        if chi_ultimate * chi_yield < 0:
+            # They cannot have opposite signs!
+            raise ValueError(
+                'Curvature at yield and ultimate cannot have opposite signs!'
+            )
+
+        # Make sure the sign of the first curvature matches the sign of the
+        # yield curvature
+        chi_first *= -1.0 if chi_first * chi_yield < 0 else 1.0
+
+        # The first curvature should be less than the yield curvature
+        if abs(chi_first) >= abs(chi_yield):
+            chi_first = chi_yield / num_pre_yield
+
+        # Define the array of curvatures
+        if abs(chi_ultimate) <= abs(chi_yield) + 1e-8:
+            # We don't want a plastic branch in the analysis
+            # this is done to speed up analysis
+            chi = np.linspace(chi_first, chi_yield, num_pre_yield)
+        else:
+            chi = np.concatenate(
+                (
+                    np.linspace(
+                        chi_first,
+                        chi_yield,
+                        num_pre_yield - 1,
+                        endpoint=False,
+                    ),
+                    np.linspace(chi_yield, chi_ultimate, num_post_yield + 1),
+                )
+            )
+        return chi
 
     def calculate_moment_curvature(
         self,
@@ -781,8 +1080,10 @@ class GenericSectionCalculator(SectionCalculator):
         num_pre_yield: int = 10,
         num_post_yield: int = 10,
         chi: t.Optional[ArrayLike] = None,
+        max_iter: int = 100,
+        tol: float = 1e-2,
     ) -> s_res.MomentCurvatureResults:
-        """Calculates the moment-curvature relation for given inclination of
+        r"""Calculates the moment-curvature relation for given inclination of
         n.a. and axial load.
 
         Arguments:
@@ -803,6 +1104,10 @@ class GenericSectionCalculator(SectionCalculator):
                 If chi is not None, chi_first, num_pre_yield and num_post_yield
                 are disregarded, and the provided chi is used directly in the
                 calculations.
+            max_iter (int): the maximum number of iterations in the iterative
+                process (default = 100).
+            tol (float): the tolerance for convergence test in terms of
+                $\deltaN_a - \deltaN_b$ (default = 1e-2).
 
         Returns:
             MomentCurvatureResults: The calculation results.
@@ -812,58 +1117,24 @@ class GenericSectionCalculator(SectionCalculator):
 
         # Create an empty response object
         res = s_res.MomentCurvatureResults()
+        res.section = self.section
         res.n = n
         # Rotate the section of angle theta
         rotated_geom = self.section.geometry.rotate(-theta)
-        if self.triangulated_data is not None:
+        if self.integration_data is not None:
             # Rotate also triangulated data!
-            self._rotate_triangulated_data(-theta)
+            self._rotate_integration_data(-theta)
 
         if chi is None:
-            # Find ultimate curvature from the strain distribution
-            # corresponding to failure and equilibrium with external axial
-            # force
-            strain = self.find_equilibrium_fixed_pivot(rotated_geom, n)
-            chi_ultimate = strain[1]
-            # Find the yielding curvature
-            strain = self.find_equilibrium_fixed_pivot(
-                rotated_geom, n, yielding=True
+            chi = self._prepare_chi_array(
+                rotated_geom,
+                n,
+                num_pre_yield,
+                num_post_yield,
+                chi_first,
+                max_iter,
+                tol,
             )
-            chi_yield = strain[1]
-            if chi_ultimate * chi_yield < 0:
-                # They cannot have opposite signs!
-                raise ValueError(
-                    'curvature at yield and ultimate cannot have opposite '
-                    'signs!'
-                )
-
-            # Make sure the sign of the first curvature matches the sign of the
-            # yield curvature
-            chi_first *= -1.0 if chi_first * chi_yield < 0 else 1.0
-
-            # The first curvature should be less than the yield curvature
-            if abs(chi_first) >= abs(chi_yield):
-                chi_first = chi_yield / num_pre_yield
-
-            # Define the array of curvatures
-            if abs(chi_ultimate) <= abs(chi_yield) + 1e-8:
-                # We don't want a plastic branch in the analysis
-                # this is done to speed up analysis
-                chi = np.linspace(chi_first, chi_yield, num_pre_yield)
-            else:
-                chi = np.concatenate(
-                    (
-                        np.linspace(
-                            chi_first,
-                            chi_yield,
-                            num_pre_yield - 1,
-                            endpoint=False,
-                        ),
-                        np.linspace(
-                            chi_yield, chi_ultimate, num_post_yield + 1
-                        ),
-                    )
-                )
 
         # prepare results
         eps_a = np.zeros_like(chi)
@@ -878,38 +1149,64 @@ class GenericSectionCalculator(SectionCalculator):
             # find the new position of neutral axis for mantaining equilibrium
             # store the information in the results object for the current
             # value of curvature
-            strain = self.find_equilibrium_fixed_curvature(
-                rotated_geom, n, curv, strain[0]
-            )
-            (
-                _,
-                My,
-                Mz,
-                _,
-            ) = self.integrator.integrate_strain_response_on_geometry(
-                geo=rotated_geom, strain=strain, tri=self.triangulated_data
-            )
-            # Rotate back to section CRS
-            T = np.array(
-                [
-                    [np.cos(theta), -np.sin(theta)],
-                    [np.sin(theta), np.cos(theta)],
-                ]
-            )
-            M = T @ np.array([[My], [Mz]])
-            eps_a[i] = strain[0]
-            my[i] = M[0, 0]
-            mz[i] = M[1, 0]
-            chi_mat = T @ np.array([[curv], [0]])
-            chi_y[i] = chi_mat[0, 0]
-            chi_z[i] = chi_mat[1, 0]
+            with warnings.catch_warnings(record=True) as w:
+                warnings.simplefilter('always', NoConvergenceWarning)
+                strain = self.find_equilibrium_fixed_curvature(
+                    rotated_geom,
+                    n,
+                    curv,
+                    strain[0],
+                    max_iter=max_iter,
+                    tol=tol,
+                )
+                (
+                    _,
+                    My,
+                    Mz,
+                    _,
+                ) = self.integrator.integrate_strain_response_on_geometry(
+                    geo=rotated_geom,
+                    strain=strain,
+                    integration_data=self.integration_data,
+                )
+                # Rotate back to section CRS
+                T = np.array(
+                    [
+                        [np.cos(theta), -np.sin(theta)],
+                        [np.sin(theta), np.cos(theta)],
+                    ]
+                )
+                M = T @ np.array([[My], [Mz]])
+                eps_a[i] = strain[0]
+                my[i] = M[0, 0]
+                mz[i] = M[1, 0]
+                chi_mat = T @ np.array([[curv], [0]])
+                chi_y[i] = chi_mat[0, 0]
+                chi_z[i] = chi_mat[1, 0]
+            if w:
+                # I should expect only one warning of this category
+                warn = w[0]
+                if issubclass(warn.category, NoConvergenceWarning):
+                    new_msg = (
+                        f'\nGenericSectionCalculator::calculate_moment_curvature\n'
+                        f'\tNo convergence during computation of step {i}.'
+                        f' The computation is stopped at the current step\n'
+                        f'{warn.message}'
+                    )
+                    warnings.warn(new_msg, NoConvergenceWarning)
+                    chi_y = chi_y[:i]
+                    chi_z = chi_z[:i]
+                    eps_a = eps_a[:i]
+                    my = my[:i]
+                    mz = mz[:i]
+                    break
 
-        if self.triangulated_data is not None:
+        if self.integration_data is not None:
             # Rotate back also triangulated data!
-            self._rotate_triangulated_data(theta)
+            self._rotate_integration_data(theta)
         res.chi_y = chi_y
         res.chi_z = chi_z
-        res.eps_axial = eps_a
+        res.eps_a = eps_a
         res.m_y = my
         res.m_z = mz
 
@@ -987,7 +1284,8 @@ class GenericSectionCalculator(SectionCalculator):
         type_4: t.Literal['linear', 'geometric', 'quadratic'] = 'linear',
         type_5: t.Literal['linear', 'geometric', 'quadratic'] = 'linear',
         type_6: t.Literal['linear', 'geometric', 'quadratic'] = 'linear',
-    ) -> s_res.NMInteractionDomain:
+        complete_domain: bool = False,
+    ) -> s_res.NMInteractionDomainResult:
         """Calculate the NM interaction domain.
 
         Arguments:
@@ -1021,12 +1319,15 @@ class GenericSectionCalculator(SectionCalculator):
                 type_1 for options.
             type_6 (str): Type of spacing for field 6 (default = 'linear'). See
                 type_1 for options.
+            complete_domain (bool): Flag to indicate if only the part of the
+                domain related to the negative moment is returned (False), or
+                if the positive part of the domain is also included (True).
 
         Returns:
             NMInteractionDomain: The calculation results.
         """
         # Prepare the results
-        res = s_res.NMInteractionDomain()
+        res = s_res.NMInteractionDomainResult()
         res.theta = theta
 
         # Process num if given.
@@ -1037,7 +1338,7 @@ class GenericSectionCalculator(SectionCalculator):
                 )
             )
 
-        # Get ultimate strain profiles for theta angle
+        # Get ultimate strain profiles for theta = theta
         strains, field_num = self._compute_ultimate_strain_profiles(
             theta=theta,
             num_1=num_1,
@@ -1054,24 +1355,49 @@ class GenericSectionCalculator(SectionCalculator):
             type_6=type_6,
         )
 
+        if complete_domain:
+            # Add strain profiles for theta = (theta + pi)
+            additional_strains, additional_field_num = (
+                self._compute_ultimate_strain_profiles(
+                    theta=theta + np.pi,
+                    num_1=num_1,
+                    num_2=num_2,
+                    num_3=num_3,
+                    num_4=num_4,
+                    num_5=num_5,
+                    num_6=num_6,
+                    type_1=type_1,
+                    type_2=type_2,
+                    type_3=type_3,
+                    type_4=type_4,
+                    type_5=type_5,
+                    type_6=type_6,
+                )
+            )
+            strains = np.concatenate((strains, additional_strains[-2:0:-1]))
+            field_num = np.concatenate(
+                (field_num, additional_field_num[-2:0:-1])
+            )
+
         # integrate all strain profiles
         forces = np.zeros_like(strains)
         for i, strain in enumerate(strains):
-            N, My, Mz, tri = (
+            N, My, Mz, integration_data = (
                 self.integrator.integrate_strain_response_on_geometry(
                     geo=self.section.geometry,
                     strain=strain,
-                    tri=self.triangulated_data,
+                    integration_data=self.integration_data,
                     mesh_size=self.mesh_size,
                 )
             )
-            if self.triangulated_data is None and tri is not None:
-                self.triangulated_data = tri
+            if self.integration_data is None and integration_data is not None:
+                self.integration_data = integration_data
             forces[i, 0] = N
             forces[i, 1] = My
             forces[i, 2] = Mz
 
         # Save to results
+        res.num_points = len(strains)
         res.strains = strains
         res.forces = forces
         res.field_num = field_num
@@ -1239,7 +1565,7 @@ class GenericSectionCalculator(SectionCalculator):
 
     def calculate_nmm_interaction_domain(
         self,
-        num_theta: int = 32,
+        num_theta: int = 33,
         num_1: int = 1,
         num_2: int = 2,
         num_3: int = 15,
@@ -1253,12 +1579,12 @@ class GenericSectionCalculator(SectionCalculator):
         type_4: t.Literal['linear', 'geometric', 'quadratic'] = 'linear',
         type_5: t.Literal['linear', 'geometric', 'quadratic'] = 'linear',
         type_6: t.Literal['linear', 'geometric', 'quadratic'] = 'linear',
-    ) -> s_res.NMMInteractionDomain:
+    ) -> s_res.NMMInteractionDomainResult:
         """Calculates the NMM interaction domain.
 
         Arguments:
             num_theta (int): Number of discretization of angle of neutral axis
-                (Optional, Default = 32).
+                (Optional, Default = 33).
             num_1 (int): Number of strain profiles in field 1
                 (Optional, default = 1).
             num_2 (int): Number of strain profiles in field 2
@@ -1291,7 +1617,7 @@ class GenericSectionCalculator(SectionCalculator):
         Returns:
             NMInteractionDomain: The calculation results.
         """
-        res = s_res.NMMInteractionDomain()
+        res = s_res.NMMInteractionDomainResult()
         res.num_theta = num_theta
 
         # Process num if given.
@@ -1306,6 +1632,7 @@ class GenericSectionCalculator(SectionCalculator):
         thetas = np.linspace(0, np.pi * 2, num_theta)
         # Initialize an empty array with the correct shape
         strains = np.empty((0, 3))
+        num_points = 0
         for theta in thetas:
             # Get ultimate strain profiles for theta angle
             strain, field_num = self._compute_ultimate_strain_profiles(
@@ -1323,25 +1650,32 @@ class GenericSectionCalculator(SectionCalculator):
                 type_5=type_5,
                 type_6=type_6,
             )
+            if num_points == 0:
+                num_points = len(strain)
+            if num_points != len(strain):
+                raise AssertionError(
+                    'All strain arrays should have the same number of points!'
+                )
             strains = np.vstack((strains, strain))
 
         # integrate all strain profiles
         forces = np.zeros_like(strains)
         for i, strain in enumerate(strains):
-            N, My, Mz, tri = (
+            N, My, Mz, integration_data = (
                 self.integrator.integrate_strain_response_on_geometry(
                     geo=self.section.geometry,
                     strain=strain,
-                    tri=self.triangulated_data,
+                    integration_data=self.integration_data,
                 )
             )
-            if self.triangulated_data is None and tri is not None:
-                self.triangulated_data = tri
+            if self.integration_data is None and integration_data is not None:
+                self.integration_data = integration_data
             forces[i, 0] = N
             forces[i, 1] = My
             forces[i, 2] = Mz
 
         # Save to results
+        res.num_points = num_points
         res.strains = strains
         res.forces = forces
         res.field_num = field_num
@@ -1349,19 +1683,27 @@ class GenericSectionCalculator(SectionCalculator):
         return res
 
     def calculate_mm_interaction_domain(
-        self, n: float = 0, num_theta: int = 32
-    ) -> s_res.MMInteractionDomain:
-        """Calculate the My-Mz interaction domain.
+        self,
+        n: float = 0,
+        num_theta: int = 33,
+        max_iter: int = 100,
+        tol: float = 1e-2,
+    ) -> s_res.MMInteractionDomainResult:
+        r"""Calculate the My-Mz interaction domain.
 
         Arguments:
             n (float): Axial force, default = 0.
-            n_theta (int): Number of discretization for theta, default = 32.
+            n_theta (int): Number of discretization for theta, default = 33.
+            max_iter (int): the maximum number of iterations in the iterative
+                process (default = 10).
+            tol (float): the tolerance for convergence test in terms of
+                $\deltaN_a - \deltaN_b$ (default = 1e-2).
 
         Return:
             MMInteractionDomain: The calculation results.
         """
         # Prepare the results
-        res = s_res.MMInteractionDomain()
+        res = s_res.MMInteractionDomainResult()
         res.num_theta = num_theta
         # Create array of thetas
         res.theta = np.linspace(0, np.pi * 2, num_theta)
@@ -1370,7 +1712,24 @@ class GenericSectionCalculator(SectionCalculator):
         res.strains = np.zeros((num_theta, 3))
         # Compute strength for given angle of NA
         for i, th in enumerate(res.theta):
-            res_bend_strength = self.calculate_bending_strength(theta=th, n=n)
+            # If for some reason there is the warning of non convergence,
+            # catch it and raise it with a custom message
+            with warnings.catch_warnings(record=True) as w:
+                warnings.simplefilter('always', NoConvergenceWarning)
+                res_bend_strength = self.calculate_bending_strength(
+                    theta=th, n=n, max_iter=max_iter, tol=tol
+                )
+            if w:
+                # I should expect only one warning of this category
+                warn = w[0]
+                if issubclass(warn.category, NoConvergenceWarning):
+                    new_msg = (
+                        '\nGenericSectionCalculator::'
+                        'calculate_mm_interaction_domain\n'
+                        f'\tNo convergence during computation with theta {th}.'
+                        f'\n{warn.message}'
+                    )
+                    warnings.warn(new_msg, NoConvergenceWarning)
             # Save forces
             res.forces[i, 0] = n
             res.forces[i, 1] = res_bend_strength.m_y
@@ -1390,7 +1749,7 @@ class GenericSectionCalculator(SectionCalculator):
         initial: bool = False,
         max_iter: int = 10,
         tol: float = 1e-6,
-    ) -> t.List[float]:
+    ) -> s_res.StrainProfileResult:
         """Get the strain plane for a given axial force and biaxial bending.
 
         Args:
@@ -1405,31 +1764,43 @@ class GenericSectionCalculator(SectionCalculator):
                 increment.
 
         Returns:
-            List(float): 3 floats: Axial strain at (0,0), and curvatures of the
-            section around y and z axes.
+            StrainProfileResult: A custom object of class StrainProfileResult
+                that contains the results. Note that the to_list() method
+                returns as a list only the strain profile coefficients. These
+                can be for instanced passed to `integrate_strain_profile`.
         """
         # Get the gometry
         geom = self.section.geometry
 
         # Collect loads in a numpy array
-        loads = np.array([n, my, mz])
+        loads = np.array([n, my, mz], dtype=float)
 
         # Compute initial tangent stiffness matrix
-        stiffness_tangent, tri = (
+        stiffness_tangent, integration_data = (
             self.integrator.integrate_strain_response_on_geometry(
                 geom,
                 [0, 0, 0],
                 integrate='modulus',
-                tri=self.triangulated_data,
+                integration_data=self.integration_data,
             )
         )
         # eventually save the triangulation data
-        if self.triangulated_data is None and tri is not None:
-            self.triangulated_data = tri
+        if self.integration_data is None and integration_data is not None:
+            self.integration_data = integration_data
 
         # Calculate strain plane with Newton Rhapson Iterative method
         num_iter = 0
-        strain = np.zeros(3)
+        converged = False
+        strain = np.zeros(3, dtype=float)
+
+        # Calculate the initial response and residuals. Note that the initial
+        # residual might be different from the applied loads if any initial
+        # strain is present
+        response = self.integrate_strain_profile(strain=strain).asarray()
+        residual = loads - response
+
+        residual_history = []
+        strain_history = []
 
         # Factorize once the stiffness matrix if using initial
         if initial:
@@ -1443,23 +1814,14 @@ class GenericSectionCalculator(SectionCalculator):
             if num_iter > max_iter:
                 break
 
-            # Calculate response and residuals
-            response = np.array(self.integrate_strain_profile(strain=strain))
-            residual = loads - response
-
             if initial:
                 # Solve using the decomposed matrix
                 delta_strain = lu_solve((lu, piv), residual)
             else:
                 # Calculate the current tangent stiffness
-                stiffness_tangent, _ = (
-                    self.integrator.integrate_strain_response_on_geometry(
-                        geom,
-                        strain,
-                        integrate='modulus',
-                        tri=self.triangulated_data,
-                    )
-                )
+                stiffness_tangent = self.integrate_strain_profile(
+                    strain=strain, integrate='modulus'
+                ).asarray()
 
                 # Solve using the current tangent stiffness
                 delta_strain = np.linalg.solve(stiffness_tangent, residual)
@@ -1467,13 +1829,50 @@ class GenericSectionCalculator(SectionCalculator):
             # Update the strain
             strain += delta_strain
 
-            num_iter += 1
+            # Calculate response and residuals
+            response = self.integrate_strain_profile(strain=strain).asarray()
+            residual = loads - response
+
+            # Append to history variables
+            residual_history.append(residual.copy())
+            strain_history.append(strain.copy())
 
             # Check for convergence:
             if np.linalg.norm(delta_strain) < tol:
+                converged = True
                 break
 
-        if num_iter >= max_iter:
-            raise StopIteration('Maximum number of iterations reached.')
+            num_iter += 1
 
-        return strain.tolist()
+        # Create the results object
+        res = s_res.StrainProfileResult(
+            eps_a=float(strain[0]),
+            chi_y=float(strain[1]),
+            chi_z=float(strain[2]),
+            n_ext=float(n),
+            m_y_ext=float(my),
+            m_z_ext=float(mz),
+            n=float(response[0]),
+            m_y=float(response[1]),
+            m_z=float(response[2]),
+            max_iter=max_iter,
+            tolerance=tol,
+            used_initial_tangent=initial,
+            iterations=num_iter + 1,
+            converged=converged,
+            residual=residual.copy(),
+            residual_history=residual_history.copy(),
+            strain_history=strain_history.copy(),
+            section=self.section,
+        )
+
+        if num_iter >= max_iter:
+            warnings.warn(
+                message=(
+                    'Maximum number of iterations reached. '
+                    'Please review the strain profile carefully.'
+                ),
+                category=NoConvergenceWarning,
+            )
+
+        return res
