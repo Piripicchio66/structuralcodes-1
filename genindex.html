@@ -368,9 +368,9 @@
 </li>
           <li><a href="api/materials/reinforcement_steels.html#structuralcodes.materials.reinforcement.ReinforcementMC2010.__init__">(structuralcodes.materials.reinforcement.ReinforcementMC2010 method)</a>
 </li>
-          <li><a href="api/sections/section_creation.html#structuralcodes.sections.GenericSection.__init__">(structuralcodes.sections.GenericSection method)</a>
+          <li><a href="api/sections/section_creation.html#structuralcodes.sections.BeamSection.__init__">(structuralcodes.sections.BeamSection method)</a>
 </li>
-          <li><a href="api/sections/section_calculator.html#structuralcodes.sections.GenericSectionCalculator.__init__">(structuralcodes.sections.GenericSectionCalculator method)</a>
+          <li><a href="api/sections/section_calculator.html#structuralcodes.sections.BeamSectionCalculator.__init__">(structuralcodes.sections.BeamSectionCalculator method)</a>
 </li>
         </ul></li>
     </ul></td>
@@ -421,12 +421,12 @@
 </li>
         <li><a href="api/codes/ec2_2004/creep_shrinkage.html#structuralcodes.codes.ec2_2004.alpha_1">alpha_1() (in module structuralcodes.codes.ec2_2004)</a>
 </li>
-    </ul></td>
-    <td style="width: 33%; vertical-align: top;"><ul>
         <li><a href="api/codes/ec2_2004/creep_shrinkage.html#structuralcodes.codes.ec2_2004.alpha_2">alpha_2() (in module structuralcodes.codes.ec2_2004)</a>
 </li>
         <li><a href="api/codes/ec2_2004/creep_shrinkage.html#structuralcodes.codes.ec2_2004.alpha_3">alpha_3() (in module structuralcodes.codes.ec2_2004)</a>
 </li>
+    </ul></td>
+    <td style="width: 33%; vertical-align: top;"><ul>
         <li><a href="api/codes/ec2_2023/material_concrete.html#structuralcodes.codes.ec2_2023.alpha_c_th">alpha_c_th() (in module structuralcodes.codes.ec2_2023)</a>
 </li>
         <li><a href="api/materials/concretes.html#structuralcodes.materials.concrete.ConcreteEC2_2004.alpha_cc">alpha_cc (structuralcodes.materials.concrete.ConcreteEC2_2004 property)</a>
@@ -462,6 +462,14 @@
         <li><a href="api/codes/ec2_2004/cracks.html#structuralcodes.codes.ec2_2004.As_min_p">As_min_p() (in module structuralcodes.codes.ec2_2004)</a>
 </li>
         <li><a href="api/codes/ec2_2023/cracks.html#structuralcodes.codes.ec2_2023.As_min_y">As_min_y() (in module structuralcodes.codes.ec2_2023)</a>
+</li>
+        <li><a href="api/sections/section_calculator.html#structuralcodes.core._section_results.IntegrateStrainForceResult.asarray">asarray() (structuralcodes.core._section_results.IntegrateStrainForceResult method)</a>
+
+        <ul>
+          <li><a href="api/sections/section_calculator.html#structuralcodes.core._section_results.IntegrateStrainStiffnessResult.asarray">(structuralcodes.core._section_results.IntegrateStrainStiffnessResult method)</a>
+</li>
+        </ul></li>
+        <li><a href="api/sections/section_calculator.html#structuralcodes.core._section_results.IntegrateStrainForceResult.astuple">astuple() (structuralcodes.core._section_results.IntegrateStrainForceResult method)</a>
 </li>
         <li><a href="api/codes/ec2_2004/shear.html#structuralcodes.codes.ec2_2004.Asw_max">Asw_max() (in module structuralcodes.codes.ec2_2004)</a>
 </li>
@@ -511,14 +519,18 @@
 </li>
         <li><a href="api/codes/mc2010/shear.html#structuralcodes.codes.mc2010.b_sr">b_sr() (in module structuralcodes.codes.mc2010)</a>
 </li>
+        <li><a href="api/sections/section_creation.html#structuralcodes.sections.BeamSection">BeamSection (class in structuralcodes.sections)</a>
+</li>
+        <li><a href="api/sections/section_calculator.html#structuralcodes.sections.BeamSectionCalculator">BeamSectionCalculator (class in structuralcodes.sections)</a>
+</li>
         <li><a href="api/codes/ec2_2004/creep_shrinkage.html#structuralcodes.codes.ec2_2004.beta_as">beta_as() (in module structuralcodes.codes.ec2_2004)</a>
 </li>
         <li><a href="api/codes/mc2010/creep_shrinkage.html#structuralcodes.codes.mc2010.beta_bc_fcm">beta_bc_fcm() (in module structuralcodes.codes.mc2010)</a>
 </li>
-        <li><a href="api/codes/mc2010/creep_shrinkage.html#structuralcodes.codes.mc2010.beta_bc_t">beta_bc_t() (in module structuralcodes.codes.mc2010)</a>
-</li>
     </ul></td>
     <td style="width: 33%; vertical-align: top;"><ul>
+        <li><a href="api/codes/mc2010/creep_shrinkage.html#structuralcodes.codes.mc2010.beta_bc_t">beta_bc_t() (in module structuralcodes.codes.mc2010)</a>
+</li>
         <li><a href="api/codes/mc2010/creep_shrinkage.html#structuralcodes.codes.mc2010.beta_bs">beta_bs() (in module structuralcodes.codes.mc2010)</a>
 </li>
         <li><a href="api/codes/ec2_2004/creep_shrinkage.html#structuralcodes.codes.ec2_2004.beta_c">beta_c() (in module structuralcodes.codes.ec2_2004)</a>
@@ -577,7 +589,7 @@
     <td style="width: 33%; vertical-align: top;"><ul>
         <li><a href="api/codes/mc2010/creep_shrinkage.html#structuralcodes.codes.mc2010.calc_J">calc_J() (in module structuralcodes.codes.mc2010)</a>
 </li>
-        <li><a href="api/sections/section_calculator.html#structuralcodes.sections.GenericSectionCalculator.calculate_bending_strength">calculate_bending_strength() (structuralcodes.sections.GenericSectionCalculator method)</a>
+        <li><a href="api/sections/section_calculator.html#structuralcodes.sections.BeamSectionCalculator.calculate_bending_strength">calculate_bending_strength() (structuralcodes.sections.BeamSectionCalculator method)</a>
 </li>
         <li><a href="api/sections/misc_functions.html#structuralcodes.sections.calculate_elastic_cracked_properties">calculate_elastic_cracked_properties() (in module structuralcodes.sections)</a>
 </li>
@@ -587,22 +599,40 @@
           <li><a href="api/geometry/geometry_creation.html#structuralcodes.geometry.SurfaceGeometry.calculate_extents">(structuralcodes.geometry.SurfaceGeometry method)</a>
 </li>
         </ul></li>
-        <li><a href="api/sections/section_calculator.html#structuralcodes.sections.GenericSectionCalculator.calculate_limit_axial_load">calculate_limit_axial_load() (structuralcodes.sections.GenericSectionCalculator method)</a>
+        <li><a href="api/sections/section_calculator.html#structuralcodes.sections.BeamSectionCalculator.calculate_limit_axial_load">calculate_limit_axial_load() (structuralcodes.sections.BeamSectionCalculator method)</a>
 </li>
-        <li><a href="api/sections/section_calculator.html#structuralcodes.sections.GenericSectionCalculator.calculate_mm_interaction_domain">calculate_mm_interaction_domain() (structuralcodes.sections.GenericSectionCalculator method)</a>
+        <li><a href="api/sections/section_calculator.html#structuralcodes.sections.BeamSectionCalculator.calculate_mm_interaction_domain">calculate_mm_interaction_domain() (structuralcodes.sections.BeamSectionCalculator method)</a>
 </li>
-        <li><a href="api/sections/section_calculator.html#structuralcodes.sections.GenericSectionCalculator.calculate_moment_curvature">calculate_moment_curvature() (structuralcodes.sections.GenericSectionCalculator method)</a>
+        <li><a href="api/sections/section_calculator.html#structuralcodes.sections.BeamSectionCalculator.calculate_moment_curvature">calculate_moment_curvature() (structuralcodes.sections.BeamSectionCalculator method)</a>
 </li>
-        <li><a href="api/sections/section_calculator.html#structuralcodes.sections.GenericSectionCalculator.calculate_nm_interaction_domain">calculate_nm_interaction_domain() (structuralcodes.sections.GenericSectionCalculator method)</a>
+        <li><a href="api/sections/section_calculator.html#structuralcodes.sections.BeamSectionCalculator.calculate_nm_interaction_domain">calculate_nm_interaction_domain() (structuralcodes.sections.BeamSectionCalculator method)</a>
 </li>
-        <li><a href="api/sections/section_calculator.html#structuralcodes.sections.GenericSectionCalculator.calculate_nmm_interaction_domain">calculate_nmm_interaction_domain() (structuralcodes.sections.GenericSectionCalculator method)</a>
+        <li><a href="api/sections/section_calculator.html#structuralcodes.sections.BeamSectionCalculator.calculate_nmm_interaction_domain">calculate_nmm_interaction_domain() (structuralcodes.sections.BeamSectionCalculator method)</a>
 </li>
-        <li><a href="api/sections/section_calculator.html#structuralcodes.sections.GenericSectionCalculator.calculate_strain_profile">calculate_strain_profile() (structuralcodes.sections.GenericSectionCalculator method)</a>
+        <li><a href="api/sections/section_calculator.html#structuralcodes.sections.BeamSectionCalculator.calculate_strain_profile">calculate_strain_profile() (structuralcodes.sections.BeamSectionCalculator method)</a>
 </li>
         <li><a href="api/geometry/geometry_creation.html#structuralcodes.geometry.SurfaceGeometry.centroid">centroid (structuralcodes.geometry.SurfaceGeometry property)</a>
 </li>
-        <li><a href="api/sections/section_calculator.html#structuralcodes.sections.GenericSectionCalculator.check_axial_load">check_axial_load() (structuralcodes.sections.GenericSectionCalculator method)</a>
+        <li><a href="api/sections/section_calculator.html#structuralcodes.sections.BeamSectionCalculator.check_axial_load">check_axial_load() (structuralcodes.sections.BeamSectionCalculator method)</a>
 </li>
+        <li><a href="api/sections/section_calculator.html#structuralcodes.core._section_results.MMInteractionDomainResult.chi_y">chi_y (structuralcodes.core._section_results.MMInteractionDomainResult property)</a>
+
+        <ul>
+          <li><a href="api/sections/section_calculator.html#structuralcodes.core._section_results.NMInteractionDomainResult.chi_y">(structuralcodes.core._section_results.NMInteractionDomainResult property)</a>
+</li>
+          <li><a href="api/sections/section_calculator.html#structuralcodes.core._section_results.NMMInteractionDomainResult.chi_y">(structuralcodes.core._section_results.NMMInteractionDomainResult property)</a>
+</li>
+          <li><a href="api/sections/section_calculator.html#structuralcodes.core._section_results.SectionDetailedResultState.chi_y">(structuralcodes.core._section_results.SectionDetailedResultState property)</a>
+</li>
+        </ul></li>
+        <li><a href="api/sections/section_calculator.html#structuralcodes.core._section_results.MMInteractionDomainResult.chi_z">chi_z (structuralcodes.core._section_results.MMInteractionDomainResult property)</a>
+
+        <ul>
+          <li><a href="api/sections/section_calculator.html#structuralcodes.core._section_results.NMMInteractionDomainResult.chi_z">(structuralcodes.core._section_results.NMMInteractionDomainResult property)</a>
+</li>
+          <li><a href="api/sections/section_calculator.html#structuralcodes.core._section_results.SectionDetailedResultState.chi_z">(structuralcodes.core._section_results.SectionDetailedResultState property)</a>
+</li>
+        </ul></li>
         <li><a href="api/geometry/geometry_creation.html#structuralcodes.geometry.CircularGeometry">CircularGeometry (class in structuralcodes.geometry)</a>
 </li>
         <li><a href="api/geometry/geometry_creation.html#structuralcodes.geometry.CompoundGeometry">CompoundGeometry (class in structuralcodes.geometry)</a>
@@ -611,10 +641,10 @@
 </li>
         <li><a href="api/materials/concretes.html#structuralcodes.materials.concrete.ConcreteEC2_2004">ConcreteEC2_2004 (class in structuralcodes.materials.concrete)</a>
 </li>
-        <li><a href="api/materials/concretes.html#structuralcodes.materials.concrete.ConcreteEC2_2023">ConcreteEC2_2023 (class in structuralcodes.materials.concrete)</a>
-</li>
     </ul></td>
     <td style="width: 33%; vertical-align: top;"><ul>
+        <li><a href="api/materials/concretes.html#structuralcodes.materials.concrete.ConcreteEC2_2023">ConcreteEC2_2023 (class in structuralcodes.materials.concrete)</a>
+</li>
         <li><a href="api/materials/concretes.html#structuralcodes.materials.concrete.ConcreteMC2010">ConcreteMC2010 (class in structuralcodes.materials.concrete)</a>
 </li>
         <li><a href="api/materials/base_materials.html#structuralcodes.core.base.Material.constitutive_law">constitutive_law (structuralcodes.core.base.Material property)</a>
@@ -649,6 +679,16 @@
 </li>
         <li><a href="api/materials/constitutive_laws.html#structuralcodes.materials.constitutive_laws.create_constitutive_law">create_constitutive_law() (in module structuralcodes.materials.constitutive_laws)</a>
 </li>
+        <li><a href="api/sections/section_calculator.html#structuralcodes.core._section_results.IntegrateStrainForceResult.create_detailed_result">create_detailed_result() (structuralcodes.core._section_results.IntegrateStrainForceResult method)</a>
+
+        <ul>
+          <li><a href="api/sections/section_calculator.html#structuralcodes.core._section_results.MomentCurvatureResults.create_detailed_result">(structuralcodes.core._section_results.MomentCurvatureResults method)</a>
+</li>
+          <li><a href="api/sections/section_calculator.html#structuralcodes.core._section_results.StrainProfileResult.create_detailed_result">(structuralcodes.core._section_results.StrainProfileResult method)</a>
+</li>
+          <li><a href="api/sections/section_calculator.html#structuralcodes.core._section_results.UltimateBendingMomentResults.create_detailed_result">(structuralcodes.core._section_results.UltimateBendingMomentResults method)</a>
+</li>
+        </ul></li>
         <li><a href="api/geometry/geometry_creation.html#structuralcodes.geometry.create_line_point_angle">create_line_point_angle() (in module structuralcodes.geometry)</a>
 </li>
         <li><a href="api/codes/mc2010/shear.html#structuralcodes.codes.mc2010.create_load_dict">create_load_dict() (in module structuralcodes.codes.mc2010)</a>
@@ -664,6 +704,10 @@
   <table style="width: 100%" class="indextable genindextable"><tr>
     <td style="width: 33%; vertical-align: top;"><ul>
         <li><a href="api/codes/ec2_2023/deflections.html#structuralcodes.codes.ec2_2023.delta_simpl">delta_simpl() (in module structuralcodes.codes.ec2_2023)</a>
+</li>
+        <li><a href="api/sections/section_calculator.html#structuralcodes.core._section_results.StrainProfileResult.delta_strain_history">delta_strain_history (structuralcodes.core._section_results.StrainProfileResult property)</a>
+</li>
+        <li><a href="api/sections/section_calculator.html#structuralcodes.core._section_results.StrainProfileResult.delta_strain_norm_history">delta_strain_norm_history (structuralcodes.core._section_results.StrainProfileResult property)</a>
 </li>
         <li><a href="api/materials/base_materials.html#structuralcodes.core.base.Material.density">density (structuralcodes.core.base.Material property)</a>
 
@@ -693,6 +737,16 @@
         </ul></li>
     </ul></td>
     <td style="width: 33%; vertical-align: top;"><ul>
+        <li><a href="api/sections/section_calculator.html#structuralcodes.core._section_results.IntegrateStrainForceResult.detailed_result">detailed_result (structuralcodes.core._section_results.IntegrateStrainForceResult property)</a>
+
+        <ul>
+          <li><a href="api/sections/section_calculator.html#structuralcodes.core._section_results.MomentCurvatureResults.detailed_result">(structuralcodes.core._section_results.MomentCurvatureResults property)</a>
+</li>
+          <li><a href="api/sections/section_calculator.html#structuralcodes.core._section_results.StrainProfileResult.detailed_result">(structuralcodes.core._section_results.StrainProfileResult property)</a>
+</li>
+          <li><a href="api/sections/section_calculator.html#structuralcodes.core._section_results.UltimateBendingMomentResults.detailed_result">(structuralcodes.core._section_results.UltimateBendingMomentResults property)</a>
+</li>
+        </ul></li>
         <li><a href="api/geometry/geometry_creation.html#structuralcodes.geometry.CircularGeometry.diameter">diameter (structuralcodes.geometry.CircularGeometry property)</a>
 
         <ul>
@@ -711,14 +765,6 @@
 
         <ul>
           <li><a href="api/materials/basic_materials.html#structuralcodes.materials.basic.ElasticPlasticMaterial.E">(structuralcodes.materials.basic.ElasticPlasticMaterial property)</a>
-</li>
-        </ul></li>
-        <li><a href="api/sections/section_calculator.html#structuralcodes.core._section_results.MMInteractionDomain.e_a">e_a (structuralcodes.core._section_results.MMInteractionDomain property)</a>
-
-        <ul>
-          <li><a href="api/sections/section_calculator.html#structuralcodes.core._section_results.NMInteractionDomain.e_a">(structuralcodes.core._section_results.NMInteractionDomain property)</a>
-</li>
-          <li><a href="api/sections/section_calculator.html#structuralcodes.core._section_results.NMMInteractionDomain.e_a">(structuralcodes.core._section_results.NMMInteractionDomain property)</a>
 </li>
         </ul></li>
         <li><a href="api/codes/ec2_2023/deflections.html#structuralcodes.codes.ec2_2023.Ec_eff">Ec_eff() (in module structuralcodes.codes.ec2_2023)</a>
@@ -753,6 +799,16 @@
 </li>
         <li><a href="api/materials/basic_materials.html#structuralcodes.materials.basic.ElasticPlasticMaterial">ElasticPlasticMaterial (class in structuralcodes.materials.basic)</a>
 </li>
+        <li><a href="api/sections/section_calculator.html#structuralcodes.core._section_results.MMInteractionDomainResult.eps_a">eps_a (structuralcodes.core._section_results.MMInteractionDomainResult property)</a>
+
+        <ul>
+          <li><a href="api/sections/section_calculator.html#structuralcodes.core._section_results.NMInteractionDomainResult.eps_a">(structuralcodes.core._section_results.NMInteractionDomainResult property)</a>
+</li>
+          <li><a href="api/sections/section_calculator.html#structuralcodes.core._section_results.NMMInteractionDomainResult.eps_a">(structuralcodes.core._section_results.NMMInteractionDomainResult property)</a>
+</li>
+          <li><a href="api/sections/section_calculator.html#structuralcodes.core._section_results.SectionDetailedResultState.eps_a">(structuralcodes.core._section_results.SectionDetailedResultState property)</a>
+</li>
+        </ul></li>
         <li><a href="api/materials/concretes.html#structuralcodes.materials.concrete.ConcreteEC2_2004.eps_c1">eps_c1 (structuralcodes.materials.concrete.ConcreteEC2_2004 property)</a>
 
         <ul>
@@ -1019,8 +1075,6 @@
 </li>
         <li><a href="api/codes/mc2010/material_concrete.html#structuralcodes.codes.mc2010.fctkmin">fctkmin() (in module structuralcodes.codes.mc2010)</a>
 </li>
-    </ul></td>
-    <td style="width: 33%; vertical-align: top;"><ul>
         <li><a href="api/materials/concretes.html#structuralcodes.materials.concrete.ConcreteEC2_2004.fctm">fctm (structuralcodes.materials.concrete.ConcreteEC2_2004 property)</a>
 
         <ul>
@@ -1029,6 +1083,8 @@
           <li><a href="api/materials/concretes.html#structuralcodes.materials.concrete.ConcreteMC2010.fctm">(structuralcodes.materials.concrete.ConcreteMC2010 property)</a>
 </li>
         </ul></li>
+    </ul></td>
+    <td style="width: 33%; vertical-align: top;"><ul>
         <li><a href="api/codes/ec2_2004/material_concrete.html#structuralcodes.codes.ec2_2004.fctm">fctm() (in module structuralcodes.codes.ec2_2004)</a>
 
         <ul>
@@ -1041,9 +1097,15 @@
 </li>
         <li><a href="api/sections/section_integrator.html#structuralcodes.sections.FiberIntegrator">FiberIntegrator (class in structuralcodes.sections)</a>
 </li>
-        <li><a href="api/sections/section_calculator.html#structuralcodes.sections.GenericSectionCalculator.find_equilibrium_fixed_curvature">find_equilibrium_fixed_curvature() (structuralcodes.sections.GenericSectionCalculator method)</a>
+        <li><a href="api/sections/section_calculator.html#structuralcodes.core._section_results.NMInteractionDomainResult.field_num">field_num (structuralcodes.core._section_results.NMInteractionDomainResult attribute)</a>
+
+        <ul>
+          <li><a href="api/sections/section_calculator.html#structuralcodes.core._section_results.NMMInteractionDomainResult.field_num">(structuralcodes.core._section_results.NMMInteractionDomainResult attribute)</a>
 </li>
-        <li><a href="api/sections/section_calculator.html#structuralcodes.sections.GenericSectionCalculator.find_equilibrium_fixed_pivot">find_equilibrium_fixed_pivot() (structuralcodes.sections.GenericSectionCalculator method)</a>
+        </ul></li>
+        <li><a href="api/sections/section_calculator.html#structuralcodes.sections.BeamSectionCalculator.find_equilibrium_fixed_curvature">find_equilibrium_fixed_curvature() (structuralcodes.sections.BeamSectionCalculator method)</a>
+</li>
+        <li><a href="api/sections/section_calculator.html#structuralcodes.sections.BeamSectionCalculator.find_equilibrium_fixed_pivot">find_equilibrium_fixed_pivot() (structuralcodes.sections.BeamSectionCalculator method)</a>
 </li>
         <li><a href="api/codes/ec2_2023/material_reinforcement.html#structuralcodes.codes.ec2_2023.fpd">fpd() (in module structuralcodes.codes.ec2_2023)</a>
 </li>
@@ -1137,20 +1199,36 @@
 </li>
         <li><a href="api/materials/basic_materials.html#structuralcodes.materials.basic.GenericMaterial">GenericMaterial (class in structuralcodes.materials.basic)</a>
 </li>
-        <li><a href="api/sections/section_creation.html#structuralcodes.sections.GenericSection">GenericSection (class in structuralcodes.sections)</a>
-</li>
-        <li><a href="api/sections/section_calculator.html#structuralcodes.sections.GenericSectionCalculator">GenericSectionCalculator (class in structuralcodes.sections)</a>
-</li>
         <li><a href="api/geometry/geometry_creation.html#structuralcodes.geometry.Geometry">Geometry (class in structuralcodes.geometry)</a>
 </li>
-        <li><a href="api/sections/section_creation.html#structuralcodes.sections.GenericSection.geometry">geometry (structuralcodes.sections.GenericSection attribute)</a>
+        <li><a href="api/sections/section_creation.html#structuralcodes.sections.BeamSection.geometry">geometry (structuralcodes.sections.BeamSection attribute)</a>
 </li>
-        <li><a href="api/sections/section_calculator.html#structuralcodes.sections.GenericSectionCalculator.get_balanced_failure_strain">get_balanced_failure_strain() (structuralcodes.sections.GenericSectionCalculator method)</a>
+        <li><a href="api/sections/section_calculator.html#structuralcodes.sections.BeamSectionCalculator.get_balanced_failure_strain">get_balanced_failure_strain() (structuralcodes.sections.BeamSectionCalculator method)</a>
 </li>
         <li><a href="api/materials/constitutive_laws.html#structuralcodes.materials.constitutive_laws.get_constitutive_laws_list">get_constitutive_laws_list() (in module structuralcodes.materials.constitutive_laws)</a>
 </li>
         <li><a href="api/codes/general.html#structuralcodes.codes.get_design_codes">get_design_codes() (in module structuralcodes.codes)</a>
 </li>
+        <li><a href="api/sections/section_calculator.html#structuralcodes.core._section_results.IntegrateStrainForceResult.get_point_strain">get_point_strain() (structuralcodes.core._section_results.IntegrateStrainForceResult method)</a>
+
+        <ul>
+          <li><a href="api/sections/section_calculator.html#structuralcodes.core._section_results.MomentCurvatureResults.get_point_strain">(structuralcodes.core._section_results.MomentCurvatureResults method)</a>
+</li>
+          <li><a href="api/sections/section_calculator.html#structuralcodes.core._section_results.StrainProfileResult.get_point_strain">(structuralcodes.core._section_results.StrainProfileResult method)</a>
+</li>
+          <li><a href="api/sections/section_calculator.html#structuralcodes.core._section_results.UltimateBendingMomentResults.get_point_strain">(structuralcodes.core._section_results.UltimateBendingMomentResults method)</a>
+</li>
+        </ul></li>
+        <li><a href="api/sections/section_calculator.html#structuralcodes.core._section_results.IntegrateStrainForceResult.get_point_stress">get_point_stress() (structuralcodes.core._section_results.IntegrateStrainForceResult method)</a>
+
+        <ul>
+          <li><a href="api/sections/section_calculator.html#structuralcodes.core._section_results.MomentCurvatureResults.get_point_stress">(structuralcodes.core._section_results.MomentCurvatureResults method)</a>
+</li>
+          <li><a href="api/sections/section_calculator.html#structuralcodes.core._section_results.StrainProfileResult.get_point_stress">(structuralcodes.core._section_results.StrainProfileResult method)</a>
+</li>
+          <li><a href="api/sections/section_calculator.html#structuralcodes.core._section_results.UltimateBendingMomentResults.get_point_stress">(structuralcodes.core._section_results.UltimateBendingMomentResults method)</a>
+</li>
+        </ul></li>
         <li><a href="api/geometry/profiles.html#structuralcodes.geometry.profiles.HD.get_polygon">get_polygon() (structuralcodes.geometry.profiles.HD class method)</a>
 
         <ul>
@@ -1181,10 +1259,10 @@
           <li><a href="api/geometry/profiles.html#structuralcodes.geometry.profiles.W.get_polygon">(structuralcodes.geometry.profiles.W class method)</a>
 </li>
         </ul></li>
-        <li><a href="api/materials/base_materials.html#structuralcodes.core.base.ConstitutiveLaw.get_secant">get_secant() (structuralcodes.core.base.ConstitutiveLaw method)</a>
-</li>
     </ul></td>
     <td style="width: 33%; vertical-align: top;"><ul>
+        <li><a href="api/materials/base_materials.html#structuralcodes.core.base.ConstitutiveLaw.get_secant">get_secant() (structuralcodes.core.base.ConstitutiveLaw method)</a>
+</li>
         <li><a href="api/materials/base_materials.html#structuralcodes.core.base.ConstitutiveLaw.get_stress">get_stress() (structuralcodes.core.base.ConstitutiveLaw method)</a>
 
         <ul>
@@ -1255,7 +1333,9 @@
 </li>
         <li><a href="api/codes/mc2010/material_concrete.html#structuralcodes.codes.mc2010.Gf">Gf() (in module structuralcodes.codes.mc2010)</a>
 </li>
-        <li><a href="api/sections/section_creation.html#structuralcodes.sections.GenericSection.gross_properties">gross_properties (structuralcodes.sections.GenericSection property)</a>
+        <li><a href="api/sections/section_creation.html#structuralcodes.sections.BeamSection.gross_properties">gross_properties (structuralcodes.sections.BeamSection property)</a>
+</li>
+        <li><a href="api/geometry/geometry_creation.html#structuralcodes.geometry.CompoundGeometry.group_filter">group_filter() (structuralcodes.geometry.CompoundGeometry method)</a>
 </li>
         <li><a href="api/geometry/geometry_creation.html#structuralcodes.geometry.Geometry.group_label">group_label (structuralcodes.geometry.Geometry property)</a>
 </li>
@@ -1391,7 +1471,7 @@
           <li><a href="api/sections/section_integrator.html#structuralcodes.sections.SectionIntegrator.integrate_modulus">(structuralcodes.sections.SectionIntegrator method)</a>
 </li>
         </ul></li>
-        <li><a href="api/sections/section_calculator.html#structuralcodes.sections.GenericSectionCalculator.integrate_strain_profile">integrate_strain_profile() (structuralcodes.sections.GenericSectionCalculator method)</a>
+        <li><a href="api/sections/section_calculator.html#structuralcodes.sections.BeamSectionCalculator.integrate_strain_profile">integrate_strain_profile() (structuralcodes.sections.BeamSectionCalculator method)</a>
 </li>
         <li><a href="api/sections/section_integrator.html#structuralcodes.sections.FiberIntegrator.integrate_strain_response_on_geometry">integrate_strain_response_on_geometry() (structuralcodes.sections.FiberIntegrator method)</a>
 
@@ -1409,6 +1489,10 @@
           <li><a href="api/sections/section_integrator.html#structuralcodes.sections.SectionIntegrator.integrate_stress">(structuralcodes.sections.SectionIntegrator method)</a>
 </li>
         </ul></li>
+        <li><a href="api/sections/section_calculator.html#structuralcodes.core._section_results.IntegrateStrainForceResult">IntegrateStrainForceResult (class in structuralcodes.core._section_results)</a>
+</li>
+        <li><a href="api/sections/section_calculator.html#structuralcodes.core._section_results.IntegrateStrainStiffnessResult">IntegrateStrainStiffnessResult (class in structuralcodes.core._section_results)</a>
+</li>
         <li><a href="api/sections/section_integrator.html#structuralcodes.sections.integrator_factory">integrator_factory() (in module structuralcodes.sections)</a>
 </li>
         <li><a href="api/geometry/profiles.html#structuralcodes.geometry.profiles.IPE">IPE (class in structuralcodes.geometry.profiles)</a>
@@ -1441,10 +1525,10 @@
 </li>
         <li><a href="api/geometry/profiles.html#structuralcodes.geometry.profiles.LI.Iy">Iy (structuralcodes.geometry.profiles.LI property)</a>
 </li>
-        <li><a href="api/geometry/profiles.html#structuralcodes.geometry.profiles.LI.iy">iy (structuralcodes.geometry.profiles.LI property)</a>
-</li>
     </ul></td>
     <td style="width: 33%; vertical-align: top;"><ul>
+        <li><a href="api/geometry/profiles.html#structuralcodes.geometry.profiles.LI.iy">iy (structuralcodes.geometry.profiles.LI property)</a>
+</li>
         <li><a href="api/geometry/profiles.html#structuralcodes.geometry.profiles.U.Iy">Iy (structuralcodes.geometry.profiles.U property)</a>
 </li>
         <li><a href="api/geometry/profiles.html#structuralcodes.geometry.profiles.U.iy">iy (structuralcodes.geometry.profiles.U property)</a>
@@ -1593,6 +1677,8 @@
           <li><a href="api/materials/concretes.html#structuralcodes.materials.concrete.ConcreteMC2010.k_sargin">(structuralcodes.materials.concrete.ConcreteMC2010 property)</a>
 </li>
         </ul></li>
+    </ul></td>
+    <td style="width: 33%; vertical-align: top;"><ul>
         <li><a href="api/codes/ec2_2004/material_concrete.html#structuralcodes.codes.ec2_2004.k_sargin">k_sargin() (in module structuralcodes.codes.ec2_2004)</a>
 
         <ul>
@@ -1601,8 +1687,6 @@
           <li><a href="api/codes/mc2010/material_concrete.html#structuralcodes.codes.mc2010.k_sargin">(in module structuralcodes.codes.mc2010)</a>
 </li>
         </ul></li>
-    </ul></td>
-    <td style="width: 33%; vertical-align: top;"><ul>
         <li><a href="api/codes/mc2010/creep_shrinkage.html#structuralcodes.codes.mc2010.k_sigma">k_sigma() (in module structuralcodes.codes.mc2010)</a>
 </li>
         <li><a href="api/codes/ec2_2023/material_concrete.html#structuralcodes.codes.ec2_2023.k_tc">k_tc() (in module structuralcodes.codes.ec2_2023)</a>
@@ -1611,20 +1695,6 @@
 </li>
         <li><a href="api/codes/ec2_2023/material_concrete.html#structuralcodes.codes.ec2_2023.k_tt">k_tt() (in module structuralcodes.codes.ec2_2023)</a>
 </li>
-        <li><a href="api/sections/section_calculator.html#structuralcodes.core._section_results.MMInteractionDomain.k_y">k_y (structuralcodes.core._section_results.MMInteractionDomain property)</a>
-
-        <ul>
-          <li><a href="api/sections/section_calculator.html#structuralcodes.core._section_results.NMInteractionDomain.k_y">(structuralcodes.core._section_results.NMInteractionDomain property)</a>
-</li>
-          <li><a href="api/sections/section_calculator.html#structuralcodes.core._section_results.NMMInteractionDomain.k_y">(structuralcodes.core._section_results.NMMInteractionDomain property)</a>
-</li>
-        </ul></li>
-        <li><a href="api/sections/section_calculator.html#structuralcodes.core._section_results.MMInteractionDomain.k_z">k_z (structuralcodes.core._section_results.MMInteractionDomain property)</a>
-
-        <ul>
-          <li><a href="api/sections/section_calculator.html#structuralcodes.core._section_results.NMMInteractionDomain.k_z">(structuralcodes.core._section_results.NMMInteractionDomain property)</a>
-</li>
-        </ul></li>
         <li><a href="api/codes/ec2_2004/cracks.html#structuralcodes.codes.ec2_2004.kc_flanges_area">kc_flanges_area() (in module structuralcodes.codes.ec2_2004)</a>
 </li>
         <li><a href="api/codes/ec2_2004/cracks.html#structuralcodes.codes.ec2_2004.kc_rect_area">kc_rect_area() (in module structuralcodes.codes.ec2_2004)</a>
@@ -1661,24 +1731,28 @@
     <td style="width: 33%; vertical-align: top;"><ul>
         <li><a href="api/codes/mc2010/shear.html#structuralcodes.codes.mc2010.m_ed">m_ed() (in module structuralcodes.codes.mc2010)</a>
 </li>
-        <li><a href="api/sections/section_calculator.html#structuralcodes.core._section_results.MMInteractionDomain.m_y">m_y (structuralcodes.core._section_results.MMInteractionDomain property)</a>
+        <li><a href="api/sections/section_calculator.html#structuralcodes.core._section_results.MMInteractionDomainResult.m_y">m_y (structuralcodes.core._section_results.MMInteractionDomainResult property)</a>
 
         <ul>
-          <li><a href="api/sections/section_calculator.html#structuralcodes.core._section_results.NMInteractionDomain.m_y">(structuralcodes.core._section_results.NMInteractionDomain property)</a>
+          <li><a href="api/sections/section_calculator.html#structuralcodes.core._section_results.NMInteractionDomainResult.m_y">(structuralcodes.core._section_results.NMInteractionDomainResult property)</a>
 </li>
-          <li><a href="api/sections/section_calculator.html#structuralcodes.core._section_results.NMMInteractionDomain.m_y">(structuralcodes.core._section_results.NMMInteractionDomain property)</a>
+          <li><a href="api/sections/section_calculator.html#structuralcodes.core._section_results.NMMInteractionDomainResult.m_y">(structuralcodes.core._section_results.NMMInteractionDomainResult property)</a>
+</li>
+          <li><a href="api/sections/section_calculator.html#structuralcodes.core._section_results.SectionDetailedResultState.m_y">(structuralcodes.core._section_results.SectionDetailedResultState property)</a>
 </li>
         </ul></li>
-        <li><a href="api/sections/section_calculator.html#structuralcodes.core._section_results.MMInteractionDomain.m_z">m_z (structuralcodes.core._section_results.MMInteractionDomain property)</a>
+        <li><a href="api/sections/section_calculator.html#structuralcodes.core._section_results.MMInteractionDomainResult.m_z">m_z (structuralcodes.core._section_results.MMInteractionDomainResult property)</a>
 
         <ul>
-          <li><a href="api/sections/section_calculator.html#structuralcodes.core._section_results.NMMInteractionDomain.m_z">(structuralcodes.core._section_results.NMMInteractionDomain property)</a>
+          <li><a href="api/sections/section_calculator.html#structuralcodes.core._section_results.NMMInteractionDomainResult.m_z">(structuralcodes.core._section_results.NMMInteractionDomainResult property)</a>
+</li>
+          <li><a href="api/sections/section_calculator.html#structuralcodes.core._section_results.SectionDetailedResultState.m_z">(structuralcodes.core._section_results.SectionDetailedResultState property)</a>
 </li>
         </ul></li>
-        <li><a href="api/sections/section_integrator.html#structuralcodes.sections.marin_integration">marin_integration() (in module structuralcodes.sections)</a>
-</li>
     </ul></td>
     <td style="width: 33%; vertical-align: top;"><ul>
+        <li><a href="api/sections/section_integrator.html#structuralcodes.sections.marin_integration">marin_integration() (in module structuralcodes.sections)</a>
+</li>
         <li><a href="api/sections/section_integrator.html#structuralcodes.sections.MarinIntegrator">MarinIntegrator (class in structuralcodes.sections)</a>
 </li>
         <li><a href="api/materials/base_materials.html#structuralcodes.core.base.Material">Material (class in structuralcodes.core.base)</a>
@@ -1693,7 +1767,7 @@
           <li><a href="api/geometry/geometry_creation.html#structuralcodes.geometry.SurfaceGeometry.mirror">(structuralcodes.geometry.SurfaceGeometry method)</a>
 </li>
         </ul></li>
-        <li><a href="api/sections/section_calculator.html#structuralcodes.core._section_results.MMInteractionDomain">MMInteractionDomain (class in structuralcodes.core._section_results)</a>
+        <li><a href="api/sections/section_calculator.html#structuralcodes.core._section_results.MMInteractionDomainResult">MMInteractionDomainResult (class in structuralcodes.core._section_results)</a>
 </li>
         <li><a href="api/sections/section_calculator.html#structuralcodes.core._section_results.MomentCurvatureResults">MomentCurvatureResults (class in structuralcodes.core._section_results)</a>
 </li>
@@ -1705,17 +1779,19 @@
   <h2>N</h2>
   <table style="width: 100%" class="indextable genindextable"><tr>
     <td style="width: 33%; vertical-align: top;"><ul>
-        <li><a href="api/sections/section_calculator.html#structuralcodes.core._section_results.MMInteractionDomain.n">n (structuralcodes.core._section_results.MMInteractionDomain property)</a>
+        <li><a href="api/sections/section_calculator.html#structuralcodes.core._section_results.MMInteractionDomainResult.n">n (structuralcodes.core._section_results.MMInteractionDomainResult property)</a>
 
         <ul>
-          <li><a href="api/sections/section_calculator.html#structuralcodes.core._section_results.NMInteractionDomain.n">(structuralcodes.core._section_results.NMInteractionDomain property)</a>
+          <li><a href="api/sections/section_calculator.html#structuralcodes.core._section_results.NMInteractionDomainResult.n">(structuralcodes.core._section_results.NMInteractionDomainResult property)</a>
 </li>
-          <li><a href="api/sections/section_calculator.html#structuralcodes.core._section_results.NMMInteractionDomain.n">(structuralcodes.core._section_results.NMMInteractionDomain property)</a>
+          <li><a href="api/sections/section_calculator.html#structuralcodes.core._section_results.NMMInteractionDomainResult.n">(structuralcodes.core._section_results.NMMInteractionDomainResult property)</a>
+</li>
+          <li><a href="api/sections/section_calculator.html#structuralcodes.core._section_results.SectionDetailedResultState.n">(structuralcodes.core._section_results.SectionDetailedResultState property)</a>
 </li>
         </ul></li>
-        <li><a href="api/sections/section_calculator.html#structuralcodes.sections.GenericSectionCalculator.n_max">n_max (structuralcodes.sections.GenericSectionCalculator property)</a>
+        <li><a href="api/sections/section_calculator.html#structuralcodes.sections.BeamSectionCalculator.n_max">n_max (structuralcodes.sections.BeamSectionCalculator property)</a>
 </li>
-        <li><a href="api/sections/section_calculator.html#structuralcodes.sections.GenericSectionCalculator.n_min">n_min (structuralcodes.sections.GenericSectionCalculator property)</a>
+        <li><a href="api/sections/section_calculator.html#structuralcodes.sections.BeamSectionCalculator.n_min">n_min (structuralcodes.sections.BeamSectionCalculator property)</a>
 </li>
         <li><a href="api/materials/concretes.html#structuralcodes.materials.concrete.ConcreteEC2_2004.n_parabolic_rectangular">n_parabolic_rectangular (structuralcodes.materials.concrete.ConcreteEC2_2004 property)</a>
 
@@ -1756,15 +1832,25 @@
 </li>
           <li><a href="api/materials/reinforcement_steels.html#structuralcodes.materials.reinforcement.ReinforcementMC2010.name">(structuralcodes.materials.reinforcement.ReinforcementMC2010 property)</a>
 </li>
-          <li><a href="api/sections/section_creation.html#structuralcodes.sections.GenericSection.name">(structuralcodes.sections.GenericSection attribute)</a>
+          <li><a href="api/sections/section_creation.html#structuralcodes.sections.BeamSection.name">(structuralcodes.sections.BeamSection attribute)</a>
 </li>
         </ul></li>
     </ul></td>
     <td style="width: 33%; vertical-align: top;"><ul>
-        <li><a href="api/sections/section_calculator.html#structuralcodes.core._section_results.NMInteractionDomain">NMInteractionDomain (class in structuralcodes.core._section_results)</a>
+        <li><a href="api/geometry/geometry_creation.html#structuralcodes.geometry.CompoundGeometry.name_filter">name_filter() (structuralcodes.geometry.CompoundGeometry method)</a>
 </li>
-        <li><a href="api/sections/section_calculator.html#structuralcodes.core._section_results.NMMInteractionDomain">NMMInteractionDomain (class in structuralcodes.core._section_results)</a>
+        <li><a href="api/sections/section_calculator.html#structuralcodes.core._section_results.MomentCurvatureResults.next_step">next_step() (structuralcodes.core._section_results.MomentCurvatureResults method)</a>
 </li>
+        <li><a href="api/sections/section_calculator.html#structuralcodes.core._section_results.NMInteractionDomainResult">NMInteractionDomainResult (class in structuralcodes.core._section_results)</a>
+</li>
+        <li><a href="api/sections/section_calculator.html#structuralcodes.core._section_results.NMMInteractionDomainResult">NMMInteractionDomainResult (class in structuralcodes.core._section_results)</a>
+</li>
+        <li><a href="api/sections/section_calculator.html#structuralcodes.core._section_results.MMInteractionDomainResult.num_theta">num_theta (structuralcodes.core._section_results.MMInteractionDomainResult attribute)</a>
+
+        <ul>
+          <li><a href="api/sections/section_calculator.html#structuralcodes.core._section_results.NMMInteractionDomainResult.num_theta">(structuralcodes.core._section_results.NMMInteractionDomainResult attribute)</a>
+</li>
+        </ul></li>
     </ul></td>
   </tr></table>
 </section>
@@ -1800,6 +1886,8 @@
         <li><a href="api/codes/ec2_2004/creep_shrinkage.html#structuralcodes.codes.ec2_2004.phi_RH">phi_RH() (in module structuralcodes.codes.ec2_2004)</a>
 </li>
         <li><a href="api/geometry/geometry_creation.html#structuralcodes.geometry.PointGeometry.point">point (structuralcodes.geometry.PointGeometry property)</a>
+</li>
+        <li><a href="api/sections/section_calculator.html#structuralcodes.core._section_results.SectionDetailedResultState.point_data">point_data (structuralcodes.core._section_results.SectionDetailedResultState property)</a>
 </li>
         <li><a href="api/geometry/geometry_creation.html#structuralcodes.geometry.PointGeometry">PointGeometry (class in structuralcodes.geometry)</a>
 </li>
@@ -1846,6 +1934,8 @@
 </li>
         </ul></li>
         <li><a href="api/sections/section_integrator.html#structuralcodes.sections.FiberIntegrator.prepare_triangulation">prepare_triangulation() (structuralcodes.sections.FiberIntegrator method)</a>
+</li>
+        <li><a href="api/sections/section_calculator.html#structuralcodes.core._section_results.MomentCurvatureResults.previous_step">previous_step() (structuralcodes.core._section_results.MomentCurvatureResults method)</a>
 </li>
         <li><a href="api/geometry/profiles.html#structuralcodes.geometry.profiles.HD.profiles">profiles() (structuralcodes.geometry.profiles.HD class method)</a>
 
@@ -1963,6 +2053,12 @@
 </li>
         <li><a href="api/materials/reinforcement_steels.html#structuralcodes.materials.reinforcement.ReinforcementMC2010">ReinforcementMC2010 (class in structuralcodes.materials.reinforcement)</a>
 </li>
+        <li><a href="api/sections/section_calculator.html#structuralcodes.core._section_results.StrainProfileResult.residual_norm">residual_norm (structuralcodes.core._section_results.StrainProfileResult property)</a>
+</li>
+        <li><a href="api/sections/section_calculator.html#structuralcodes.core._section_results.StrainProfileResult.residual_norm_history">residual_norm_history (structuralcodes.core._section_results.StrainProfileResult property)</a>
+</li>
+        <li><a href="api/sections/section_calculator.html#structuralcodes.core._section_results.StrainProfileResult.response_history">response_history (structuralcodes.core._section_results.StrainProfileResult property)</a>
+</li>
         <li><a href="api/codes/ec2_2004/cracks.html#structuralcodes.codes.ec2_2004.rho_p_eff">rho_p_eff() (in module structuralcodes.codes.ec2_2004)</a>
 </li>
         <li><a href="api/geometry/geometry_creation.html#structuralcodes.geometry.CompoundGeometry.rotate">rotate() (structuralcodes.geometry.CompoundGeometry method)</a>
@@ -1993,16 +2089,20 @@
 </li>
         <li><a href="api/materials/constitutive_laws.html#structuralcodes.materials.constitutive_laws.Sargin">Sargin (class in structuralcodes.materials.constitutive_laws)</a>
 </li>
-        <li><a href="api/sections/section_creation.html#structuralcodes.sections.GenericSection.section_calculator">section_calculator (structuralcodes.sections.GenericSection attribute)</a>
+        <li><a href="api/sections/section_creation.html#structuralcodes.sections.BeamSection.section_calculator">section_calculator (structuralcodes.sections.BeamSection attribute)</a>
+</li>
+        <li><a href="api/sections/section_calculator.html#structuralcodes.core._section_results.SectionDetailedResultState">SectionDetailedResultState (class in structuralcodes.core._section_results)</a>
 </li>
         <li><a href="api/sections/section_integrator.html#structuralcodes.sections.SectionIntegrator">SectionIntegrator (class in structuralcodes.sections)</a>
 </li>
         <li><a href="api/sections/section_calculator.html#structuralcodes.core._section_results.SectionProperties">SectionProperties (class in structuralcodes.core._section_results)</a>
 </li>
-    </ul></td>
-    <td style="width: 33%; vertical-align: top;"><ul>
         <li><a href="api/codes/general.html#structuralcodes.codes.set_design_code">set_design_code() (in module structuralcodes.codes)</a>
 </li>
+        <li><a href="api/sections/section_calculator.html#structuralcodes.core._section_results.MomentCurvatureResults.set_step">set_step() (structuralcodes.core._section_results.MomentCurvatureResults method)</a>
+</li>
+    </ul></td>
+    <td style="width: 33%; vertical-align: top;"><ul>
         <li><a href="api/codes/mc2010/shear.html#structuralcodes.codes.mc2010.sigma_swd">sigma_swd() (in module structuralcodes.codes.mc2010)</a>
 </li>
         <li><a href="api/geometry/geometry_creation.html#structuralcodes.geometry.SurfaceGeometry.split">split() (structuralcodes.geometry.SurfaceGeometry method)</a>
@@ -2017,7 +2117,15 @@
 </li>
         <li><a href="api/codes/ec2_2023/cracks.html#structuralcodes.codes.ec2_2023.srm_cal">srm_cal() (in module structuralcodes.codes.ec2_2023)</a>
 </li>
+        <li><a href="api/sections/section_calculator.html#structuralcodes.core._section_results.SectionDetailedResultState.strain">strain (structuralcodes.core._section_results.SectionDetailedResultState property)</a>
+</li>
         <li><a href="api/materials/constitutive_laws.html#structuralcodes.materials.constitutive_laws.InitialStrain.strain_compatibility">strain_compatibility (structuralcodes.materials.constitutive_laws.InitialStrain property)</a>
+</li>
+        <li><a href="api/sections/section_calculator.html#structuralcodes.core._section_results.StrainProfileResult.strain_plane">strain_plane (structuralcodes.core._section_results.StrainProfileResult property)</a>
+</li>
+        <li><a href="api/sections/section_calculator.html#structuralcodes.core._section_results.StrainProfileResult">StrainProfileResult (class in structuralcodes.core._section_results)</a>
+</li>
+        <li><a href="api/sections/section_calculator.html#structuralcodes.core._section_results.SectionDetailedResultState.surface_data">surface_data (structuralcodes.core._section_results.SectionDetailedResultState property)</a>
 </li>
         <li><a href="api/geometry/geometry_creation.html#structuralcodes.geometry.SurfaceGeometry">SurfaceGeometry (class in structuralcodes.geometry)</a>
 </li>
@@ -2089,9 +2197,13 @@
           <li><a href="api/geometry/profiles.html#structuralcodes.geometry.profiles.W.tf">(structuralcodes.geometry.profiles.W property)</a>
 </li>
         </ul></li>
-        <li><a href="api/geometry/profiles.html#structuralcodes.geometry.profiles.HD.theta">theta (structuralcodes.geometry.profiles.HD property)</a>
+        <li><a href="api/sections/section_calculator.html#structuralcodes.core._section_results.MMInteractionDomainResult.theta">theta (structuralcodes.core._section_results.MMInteractionDomainResult attribute)</a>
 
         <ul>
+          <li><a href="api/sections/section_calculator.html#structuralcodes.core._section_results.NMInteractionDomainResult.theta">(structuralcodes.core._section_results.NMInteractionDomainResult attribute)</a>
+</li>
+          <li><a href="api/geometry/profiles.html#structuralcodes.geometry.profiles.HD.theta">(structuralcodes.geometry.profiles.HD property)</a>
+</li>
           <li><a href="api/geometry/profiles.html#structuralcodes.geometry.profiles.HE.theta">(structuralcodes.geometry.profiles.HE property)</a>
 </li>
           <li><a href="api/geometry/profiles.html#structuralcodes.geometry.profiles.HP.theta">(structuralcodes.geometry.profiles.HP property)</a>
@@ -2121,6 +2233,8 @@
         </ul></li>
     </ul></td>
     <td style="width: 33%; vertical-align: top;"><ul>
+        <li><a href="api/sections/section_calculator.html#structuralcodes.core._section_results.StrainProfileResult.to_list">to_list() (structuralcodes.core._section_results.StrainProfileResult method)</a>
+</li>
         <li><a href="api/geometry/geometry_creation.html#structuralcodes.geometry.CompoundGeometry.translate">translate() (structuralcodes.geometry.CompoundGeometry method)</a>
 
         <ul>

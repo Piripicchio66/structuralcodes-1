@@ -606,7 +606,7 @@
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">structuralcodes.geometry</span><span class="w"> </span><span class="kn">import</span> <span class="n">SurfaceGeometry</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">structuralcodes.geometry.profiles</span><span class="w"> </span><span class="kn">import</span> <span class="n">IPE</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">structuralcodes.materials.basic</span><span class="w"> </span><span class="kn">import</span> <span class="n">ElasticPlasticMaterial</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">structuralcodes.sections</span><span class="w"> </span><span class="kn">import</span> <span class="n">GenericSection</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">structuralcodes.sections</span><span class="w"> </span><span class="kn">import</span> <span class="n">BeamSection</span>
 
 <span class="c1"># Create a profile</span>
 <span class="n">ipe100</span> <span class="o">=</span> <span class="n">IPE</span><span class="p">(</span><span class="s1">&#39;IPE100&#39;</span><span class="p">)</span>
@@ -616,7 +616,7 @@
 
 <span class="c1"># Create a geometry and a section</span>
 <span class="n">geom</span> <span class="o">=</span> <span class="n">SurfaceGeometry</span><span class="p">(</span><span class="n">poly</span><span class="o">=</span><span class="n">ipe100</span><span class="o">.</span><span class="n">polygon</span><span class="p">,</span> <span class="n">material</span><span class="o">=</span><span class="n">steel</span><span class="p">)</span>
-<span class="n">section</span> <span class="o">=</span> <span class="n">GenericSection</span><span class="p">(</span><span class="n">geometry</span><span class="o">=</span><span class="n">geom</span><span class="p">)</span>
+<span class="n">section</span> <span class="o">=</span> <span class="n">BeamSection</span><span class="p">(</span><span class="n">geometry</span><span class="o">=</span><span class="n">geom</span><span class="p">)</span>
 
 <span class="c1"># Use the section calculator to calculate the bending strength</span>
 <span class="n">bending_strength</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">section_calculator</span><span class="o">.</span><span class="n">calculate_bending_strength</span><span class="p">()</span>

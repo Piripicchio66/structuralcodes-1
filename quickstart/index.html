@@ -332,7 +332,7 @@
 <span class="kn">from</span><span class="w"> </span><span class="nn">structuralcodes.geometry</span><span class="w"> </span><span class="kn">import</span> <span class="n">SurfaceGeometry</span><span class="p">,</span> <span class="n">add_reinforcement</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">structuralcodes.materials.concrete</span><span class="w"> </span><span class="kn">import</span> <span class="n">create_concrete</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">structuralcodes.materials.reinforcement</span><span class="w"> </span><span class="kn">import</span> <span class="n">create_reinforcement</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">structuralcodes.sections</span><span class="w"> </span><span class="kn">import</span> <span class="n">GenericSection</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">structuralcodes.sections</span><span class="w"> </span><span class="kn">import</span> <span class="n">BeamSection</span>
 </pre></div>
 </div>
 <div class="admonition seealso">
@@ -415,16 +415,16 @@
 <span class="p">)</span>
 </pre></div>
 </div>
-<p>Create a <a class="reference internal" href="../api/sections/section_creation.html#structuralcodes.sections.GenericSection" title="structuralcodes.sections.GenericSection"><code class="xref py py-class docutils literal notranslate"><span class="pre">GenericSection</span></code></a> based on the geometry:</p>
+<p>Create a <a class="reference internal" href="../api/sections/section_creation.html#structuralcodes.sections.BeamSection" title="structuralcodes.sections.BeamSection"><code class="xref py py-class docutils literal notranslate"><span class="pre">BeamSection</span></code></a> based on the geometry:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># Create section</span>
-<span class="n">section</span> <span class="o">=</span> <span class="n">GenericSection</span><span class="p">(</span><span class="n">geometry</span><span class="p">)</span>
+<span class="n">section</span> <span class="o">=</span> <span class="n">BeamSection</span><span class="p">(</span><span class="n">geometry</span><span class="p">)</span>
 </pre></div>
 </div>
 <div class="admonition seealso">
 <p class="admonition-title">See also</p>
 <p><a class="reference internal" href="../api/sections/index.html#api-sections"><span class="std std-ref">Section reference</span></a></p>
 </div>
-<p>Call the <a class="reference internal" href="../api/sections/section_calculator.html#structuralcodes.sections.GenericSectionCalculator.calculate_moment_curvature" title="structuralcodes.sections.GenericSectionCalculator.calculate_moment_curvature"><code class="xref py py-func docutils literal notranslate"><span class="pre">.calculate_moment_curvature()</span></code></a> method on the <a class="reference internal" href="../api/sections/section_calculator.html#structuralcodes.sections.GenericSectionCalculator" title="structuralcodes.sections.GenericSectionCalculator"><code class="xref py py-class docutils literal notranslate"><span class="pre">GenericSectionCalculator</span></code></a> to calculate the moment-curvature relation:</p>
+<p>Call the <a class="reference internal" href="../api/sections/section_calculator.html#structuralcodes.sections.BeamSectionCalculator.calculate_moment_curvature" title="structuralcodes.sections.BeamSectionCalculator.calculate_moment_curvature"><code class="xref py py-func docutils literal notranslate"><span class="pre">.calculate_moment_curvature()</span></code></a> method on the <a class="reference internal" href="../api/sections/section_calculator.html#structuralcodes.sections.BeamSectionCalculator" title="structuralcodes.sections.BeamSectionCalculator"><code class="xref py py-class docutils literal notranslate"><span class="pre">BeamSectionCalculator</span></code></a> to calculate the moment-curvature relation:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># Calculate the moment-curvature response</span>
 <span class="n">moment_curvature</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">section_calculator</span><span class="o">.</span><span class="n">calculate_moment_curvature</span><span class="p">()</span>
 </pre></div>
@@ -447,7 +447,7 @@
 <span class="linenos"> 6</span><span class="kn">from</span><span class="w"> </span><span class="nn">structuralcodes.geometry</span><span class="w"> </span><span class="kn">import</span> <span class="n">SurfaceGeometry</span><span class="p">,</span> <span class="n">add_reinforcement</span>
 <span class="linenos"> 7</span><span class="kn">from</span><span class="w"> </span><span class="nn">structuralcodes.materials.concrete</span><span class="w"> </span><span class="kn">import</span> <span class="n">create_concrete</span>
 <span class="linenos"> 8</span><span class="kn">from</span><span class="w"> </span><span class="nn">structuralcodes.materials.reinforcement</span><span class="w"> </span><span class="kn">import</span> <span class="n">create_reinforcement</span>
-<span class="linenos"> 9</span><span class="kn">from</span><span class="w"> </span><span class="nn">structuralcodes.sections</span><span class="w"> </span><span class="kn">import</span> <span class="n">GenericSection</span>
+<span class="linenos"> 9</span><span class="kn">from</span><span class="w"> </span><span class="nn">structuralcodes.sections</span><span class="w"> </span><span class="kn">import</span> <span class="n">BeamSection</span>
 <span class="linenos">10</span>
 <span class="linenos">11</span><span class="c1"># Set the active design code</span>
 <span class="linenos">12</span><span class="n">set_design_code</span><span class="p">(</span><span class="s1">&#39;ec2_2004&#39;</span><span class="p">)</span>
@@ -503,7 +503,7 @@
 <span class="linenos">62</span><span class="p">)</span>
 <span class="linenos">63</span>
 <span class="linenos">64</span><span class="c1"># Create section</span>
-<span class="linenos">65</span><span class="n">section</span> <span class="o">=</span> <span class="n">GenericSection</span><span class="p">(</span><span class="n">geometry</span><span class="p">)</span>
+<span class="linenos">65</span><span class="n">section</span> <span class="o">=</span> <span class="n">BeamSection</span><span class="p">(</span><span class="n">geometry</span><span class="p">)</span>
 <span class="linenos">66</span>
 <span class="linenos">67</span><span class="c1"># Calculate the moment-curvature response</span>
 <span class="linenos">68</span><span class="n">moment_curvature</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">section_calculator</span><span class="o">.</span><span class="n">calculate_moment_curvature</span><span class="p">()</span>

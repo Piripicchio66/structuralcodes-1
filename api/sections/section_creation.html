@@ -324,19 +324,19 @@
         <article role="main" id="furo-main-content">
           <section class="tex2jax_ignore mathjax_ignore" id="section-creation">
 <span id="api-section-creation"></span><h1>Section creation<a class="headerlink" href="#section-creation" title="Link to this heading">¶</a></h1>
-<section id="the-generic-section">
-<h2>The generic section<a class="headerlink" href="#the-generic-section" title="Link to this heading">¶</a></h2>
+<section id="the-beam-section">
+<h2>The beam section<a class="headerlink" href="#the-beam-section" title="Link to this heading">¶</a></h2>
 <dl class="py class">
-<dt class="sig sig-object py" id="structuralcodes.sections.GenericSection">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">structuralcodes.sections.</span></span><span class="sig-name descname"><span class="pre">GenericSection</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">geometry</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="../geometry/geometry_creation.html#structuralcodes.geometry.SurfaceGeometry" title="structuralcodes.geometry._geometry.SurfaceGeometry"><span class="pre">SurfaceGeometry</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference internal" href="../geometry/geometry_creation.html#structuralcodes.geometry.CompoundGeometry" title="structuralcodes.geometry._geometry.CompoundGeometry"><span class="pre">CompoundGeometry</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">integrator</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Literal</span><span class="p"><span class="pre">[</span></span><span class="s"><span class="pre">'marin'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">'fiber'</span></span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'marin'</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/fib-international/structuralcodes/tree/main/structuralcodes\sections\_generic.py#L27-L94"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#structuralcodes.sections.GenericSection" title="Link to this definition">¶</a></dt>
-<dd><p>This is the implementation of the generic class section.</p>
+<dt class="sig sig-object py" id="structuralcodes.sections.BeamSection">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">structuralcodes.sections.</span></span><span class="sig-name descname"><span class="pre">BeamSection</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">geometry</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="../geometry/geometry_creation.html#structuralcodes.geometry.SurfaceGeometry" title="structuralcodes.geometry._geometry.SurfaceGeometry"><span class="pre">SurfaceGeometry</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference internal" href="../geometry/geometry_creation.html#structuralcodes.geometry.CompoundGeometry" title="structuralcodes.geometry._geometry.CompoundGeometry"><span class="pre">CompoundGeometry</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">integrator</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Literal</span><span class="p"><span class="pre">[</span></span><span class="s"><span class="pre">'marin'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">'fiber'</span></span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'marin'</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/fib-international/structuralcodes/tree/main/structuralcodes\sections\_beam_section.py#L28-L95"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#structuralcodes.sections.BeamSection" title="Link to this definition">¶</a></dt>
+<dd><p>This is the implementation of the beam section.</p>
 <p>The section is a 2D geometry where Y axis is horizontal while Z axis is
 vertical.</p>
 <p>The moments and curvatures around Y and Z axes are assumed positive
 according to RHR.</p>
 <dl class="py attribute">
-<dt class="sig sig-object py" id="structuralcodes.sections.GenericSection.geometry">
-<span class="sig-name descname"><span class="pre">geometry</span></span><a class="headerlink" href="#structuralcodes.sections.GenericSection.geometry" title="Link to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="structuralcodes.sections.BeamSection.geometry">
+<span class="sig-name descname"><span class="pre">geometry</span></span><a class="headerlink" href="#structuralcodes.sections.BeamSection.geometry" title="Link to this definition">¶</a></dt>
 <dd><p>The geometry of
 the section.</p>
 <dl class="field-list simple">
@@ -347,8 +347,8 @@ the section.</p>
 </dd></dl>
 
 <dl class="py attribute">
-<dt class="sig sig-object py" id="structuralcodes.sections.GenericSection.name">
-<span class="sig-name descname"><span class="pre">name</span></span><a class="headerlink" href="#structuralcodes.sections.GenericSection.name" title="Link to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="structuralcodes.sections.BeamSection.name">
+<span class="sig-name descname"><span class="pre">name</span></span><a class="headerlink" href="#structuralcodes.sections.BeamSection.name" title="Link to this definition">¶</a></dt>
 <dd><p>The name of the section.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
@@ -358,22 +358,22 @@ the section.</p>
 </dd></dl>
 
 <dl class="py attribute">
-<dt class="sig sig-object py" id="structuralcodes.sections.GenericSection.section_calculator">
-<span class="sig-name descname"><span class="pre">section_calculator</span></span><a class="headerlink" href="#structuralcodes.sections.GenericSection.section_calculator" title="Link to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="structuralcodes.sections.BeamSection.section_calculator">
+<span class="sig-name descname"><span class="pre">section_calculator</span></span><a class="headerlink" href="#structuralcodes.sections.BeamSection.section_calculator" title="Link to this definition">¶</a></dt>
 <dd><p>The object responsible
 for performing different calculations on the section (e.g. bending
 strength, moment curvature, etc.).</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference internal" href="section_calculator.html#structuralcodes.sections.GenericSectionCalculator" title="structuralcodes.sections.GenericSectionCalculator">GenericSectionCalculator</a></p>
+<dd class="field-odd"><p><a class="reference internal" href="section_calculator.html#structuralcodes.sections.BeamSectionCalculator" title="structuralcodes.sections.BeamSectionCalculator">BeamSectionCalculator</a></p>
 </dd>
 </dl>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="structuralcodes.sections.GenericSection.__init__">
-<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">geometry</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="../geometry/geometry_creation.html#structuralcodes.geometry.SurfaceGeometry" title="structuralcodes.geometry._geometry.SurfaceGeometry"><span class="pre">SurfaceGeometry</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference internal" href="../geometry/geometry_creation.html#structuralcodes.geometry.CompoundGeometry" title="structuralcodes.geometry._geometry.CompoundGeometry"><span class="pre">CompoundGeometry</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">integrator</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Literal</span><span class="p"><span class="pre">[</span></span><span class="s"><span class="pre">'marin'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">'fiber'</span></span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'marin'</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference external" href="https://github.com/fib-international/structuralcodes/tree/main/structuralcodes\sections\_generic.py#L47-L85"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#structuralcodes.sections.GenericSection.__init__" title="Link to this definition">¶</a></dt>
-<dd><p>Initialize a GenericSection.</p>
+<dt class="sig sig-object py" id="structuralcodes.sections.BeamSection.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">geometry</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="../geometry/geometry_creation.html#structuralcodes.geometry.SurfaceGeometry" title="structuralcodes.geometry._geometry.SurfaceGeometry"><span class="pre">SurfaceGeometry</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference internal" href="../geometry/geometry_creation.html#structuralcodes.geometry.CompoundGeometry" title="structuralcodes.geometry._geometry.CompoundGeometry"><span class="pre">CompoundGeometry</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">integrator</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Literal</span><span class="p"><span class="pre">[</span></span><span class="s"><span class="pre">'marin'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">'fiber'</span></span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'marin'</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference external" href="https://github.com/fib-international/structuralcodes/tree/main/structuralcodes\sections\_beam_section.py#L48-L86"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#structuralcodes.sections.BeamSection.__init__" title="Link to this definition">¶</a></dt>
+<dd><p>Initialize a BeamSection.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
@@ -388,18 +388,18 @@ section calculator.</p></li>
 </dl>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
-<p>The GenericSection uses a GenericSectionCalculator for all
-calculations. The GenericSectionCalculator uses a SectionIntegrator
+<p>The BeamSection uses a BeamSectionCalculator for all
+calculations. The BeamSectionCalculator uses a SectionIntegrator
 for integrating over the section. Any additional keyword arguments
-used when creating the GenericSection are passed on to the
+used when creating the BeamSection are passed on to the
 SectionCalculator to customize the behaviour. See
-GenericSectionCalculator for available keyword arguments.</p>
+BeamSectionCalculator for available keyword arguments.</p>
 </div>
 </dd></dl>
 
 <dl class="py property">
-<dt class="sig sig-object py" id="structuralcodes.sections.GenericSection.gross_properties">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">gross_properties</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="section_calculator.html#structuralcodes.core._section_results.SectionProperties" title="structuralcodes.core._section_results.SectionProperties"><span class="pre">SectionProperties</span></a></em><a class="headerlink" href="#structuralcodes.sections.GenericSection.gross_properties" title="Link to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="structuralcodes.sections.BeamSection.gross_properties">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">gross_properties</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="section_calculator.html#structuralcodes.core._section_results.SectionProperties" title="structuralcodes.core._section_results.SectionProperties"><span class="pre">SectionProperties</span></a></em><a class="headerlink" href="#structuralcodes.sections.BeamSection.gross_properties" title="Link to this definition">¶</a></dt>
 <dd><p>Return the gross properties of the section.</p>
 </dd></dl>
 
@@ -471,13 +471,13 @@ GenericSectionCalculator for available keyword arguments.</p>
           <div class="toc-tree">
             <ul>
 <li><a class="reference internal" href="#">Section creation</a><ul>
-<li><a class="reference internal" href="#the-generic-section">The generic section</a><ul>
-<li><a class="reference internal" href="#structuralcodes.sections.GenericSection"><code class="docutils literal notranslate"><span class="pre">GenericSection</span></code></a><ul>
-<li><a class="reference internal" href="#structuralcodes.sections.GenericSection.geometry"><code class="docutils literal notranslate"><span class="pre">GenericSection.geometry</span></code></a></li>
-<li><a class="reference internal" href="#structuralcodes.sections.GenericSection.name"><code class="docutils literal notranslate"><span class="pre">GenericSection.name</span></code></a></li>
-<li><a class="reference internal" href="#structuralcodes.sections.GenericSection.section_calculator"><code class="docutils literal notranslate"><span class="pre">GenericSection.section_calculator</span></code></a></li>
-<li><a class="reference internal" href="#structuralcodes.sections.GenericSection.__init__"><code class="docutils literal notranslate"><span class="pre">GenericSection.__init__()</span></code></a></li>
-<li><a class="reference internal" href="#structuralcodes.sections.GenericSection.gross_properties"><code class="docutils literal notranslate"><span class="pre">GenericSection.gross_properties</span></code></a></li>
+<li><a class="reference internal" href="#the-beam-section">The beam section</a><ul>
+<li><a class="reference internal" href="#structuralcodes.sections.BeamSection"><code class="docutils literal notranslate"><span class="pre">BeamSection</span></code></a><ul>
+<li><a class="reference internal" href="#structuralcodes.sections.BeamSection.geometry"><code class="docutils literal notranslate"><span class="pre">BeamSection.geometry</span></code></a></li>
+<li><a class="reference internal" href="#structuralcodes.sections.BeamSection.name"><code class="docutils literal notranslate"><span class="pre">BeamSection.name</span></code></a></li>
+<li><a class="reference internal" href="#structuralcodes.sections.BeamSection.section_calculator"><code class="docutils literal notranslate"><span class="pre">BeamSection.section_calculator</span></code></a></li>
+<li><a class="reference internal" href="#structuralcodes.sections.BeamSection.__init__"><code class="docutils literal notranslate"><span class="pre">BeamSection.__init__()</span></code></a></li>
+<li><a class="reference internal" href="#structuralcodes.sections.BeamSection.gross_properties"><code class="docutils literal notranslate"><span class="pre">BeamSection.gross_properties</span></code></a></li>
 </ul>
 </li>
 </ul>

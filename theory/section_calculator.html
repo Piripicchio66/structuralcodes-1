@@ -559,7 +559,7 @@ The final result is represented by the data structure collecting for all points 
 <span class="p">)</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">structuralcodes.materials.concrete</span><span class="w"> </span><span class="kn">import</span> <span class="n">create_concrete</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">structuralcodes.materials.reinforcement</span><span class="w"> </span><span class="kn">import</span> <span class="n">create_reinforcement</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">structuralcodes.sections</span><span class="w"> </span><span class="kn">import</span> <span class="n">GenericSection</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">structuralcodes.sections</span><span class="w"> </span><span class="kn">import</span> <span class="n">BeamSection</span>
 
 <span class="c1"># Set parameters</span>
 <span class="n">height</span> <span class="o">=</span> <span class="mi">625</span>
@@ -599,9 +599,7 @@ The final result is represented by the data structure collecting for all points 
         <span class="n">n</span><span class="o">=</span><span class="n">n_bars</span><span class="p">,</span>
     <span class="p">)</span>
 
-<span class="n">section</span> <span class="o">=</span> <span class="n">GenericSection</span><span class="p">(</span>
-    <span class="n">concrete_geometry</span><span class="p">,</span> <span class="n">integrator</span><span class="o">=</span><span class="s1">&#39;fiber&#39;</span><span class="p">,</span> <span class="n">mesh_size</span><span class="o">=</span><span class="mf">0.001</span>
-<span class="p">)</span>
+<span class="n">section</span> <span class="o">=</span> <span class="n">BeamSection</span><span class="p">(</span><span class="n">concrete_geometry</span><span class="p">,</span> <span class="n">integrator</span><span class="o">=</span><span class="s1">&#39;fiber&#39;</span><span class="p">,</span> <span class="n">mesh_size</span><span class="o">=</span><span class="mf">0.001</span><span class="p">)</span>
 
 <span class="c1"># Perform the analyses and create the plot</span>
 <span class="n">fig</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">()</span>
