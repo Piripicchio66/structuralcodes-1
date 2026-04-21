@@ -71,9 +71,7 @@ class BeamSection(Section):
             SectionCalculator to customize the behaviour. See
             BeamSectionCalculator for available keyword arguments.
         """
-        if name is None:
-            name = 'BeamSection'
-        super().__init__(name)
+        super().__init__(name=name, base_name='BeamSection')
         # Since only CompoundGeometry has the attribute geometries,
         # if a SurfaceGeometry is input, we create a CompoundGeometry
         # with only that geometry contained. After that all algorithms

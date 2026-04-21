@@ -19,10 +19,12 @@ class Section(abc.ABC):
     id: int
     section_calculator: SectionCalculator
 
-    def __init__(self, name: t.Optional[str] = None) -> None:
+    def __init__(
+        self, name: t.Optional[str] = None, base_name: str = 'Section'
+    ) -> None:
         """Initialize a Section object."""
         self.id = Section.return_global_counter_and_increase()
-        self._name = name if name is not None else f'Section_{self.id}'
+        self._name = name if name is not None else f'{base_name}_{self.id}'
 
     @property
     def name(self):
