@@ -15,14 +15,14 @@ class Section(abc.ABC):
     """
 
     geometry: Geometry
-    section_counter: t.ClassVar[int] = 0
+    _section_counter: t.ClassVar[int] = 0
+    id: int
     section_calculator: SectionCalculator
 
     def __init__(self, name: t.Optional[str] = None) -> None:
         """Initialize a Section object."""
-        self.id = self.section_counter
+        self.id = Section.return_global_counter_and_increase()
         self._name = name if name is not None else f'Section_{self.id}'
-        self._increase_global_counter()
 
     @property
     def name(self):
@@ -31,7 +31,14 @@ class Section(abc.ABC):
 
     @classmethod
     def _increase_global_counter(cls):
-        cls.section_counter += 1
+        cls._section_counter += 1
+
+    @classmethod
+    def return_global_counter_and_increase(cls):
+        """Returns the current counter and increases it by one."""
+        counter = cls._section_counter
+        cls._increase_global_counter()
+        return counter
 
 
 class SectionCalculator(abc.ABC):
