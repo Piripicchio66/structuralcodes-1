@@ -62,8 +62,9 @@ def test_rectangular_section():
     assert geo.geometries[0].centroid[1] == 0
 
     # Create the section (default Marin integrator)
+    counter = BeamSection._section_counter
     sec = BeamSection(geo)
-    assert sec.name == 'BeamSection'
+    assert sec.name == f'BeamSection_{counter}'
 
     assert math.isclose(sec.gross_properties.area, 200 * 400)
 
@@ -170,8 +171,9 @@ def test_rectangular_section_tangent_stiffness(b, h, E, integrator):
     assert geo.polygon.centroid.coords[0][1] == 0
 
     # Create the section with fiber integrator
+    counter = BeamSection._section_counter
     sec = BeamSection(geo, integrator=integrator, mesh_size=0.0001)
-    assert sec.name == 'BeamSection'
+    assert sec.name == f'BeamSection_{counter}'
 
     assert math.isclose(sec.gross_properties.area, b * h)
 
@@ -435,8 +437,9 @@ def test_rectangular_section_tangent_stiffness_translated(b, h, E, integrator):
     assert geo.polygon.centroid.coords[0][1] == h / 2
 
     # Create the section with fiber integrator
+    counter = BeamSection._section_counter
     sec = BeamSection(geo, integrator=integrator, mesh_size=0.0001)
-    assert sec.name == 'BeamSection'
+    assert sec.name == f'BeamSection_{counter}'
 
     assert math.isclose(sec.gross_properties.area, b * h)
 
@@ -681,8 +684,9 @@ def test_holed_section():
     assert geo.geometries[0].centroid[1] == 0
 
     # Create the section (default Marin integrator)
+    counter = BeamSection._section_counter
     sec = BeamSection(geo)
-    assert sec.name == 'BeamSection'
+    assert sec.name == f'BeamSection_{counter}'
 
     assert math.isclose(sec.gross_properties.area, 260000)
 
@@ -727,8 +731,9 @@ def test_u_section():
     assert geo.geometries[0].centroid[1] == 0
 
     # Create the section (default Marin integrator)
+    counter = BeamSection._section_counter
     sec = BeamSection(geo)
-    assert sec.name == 'BeamSection'
+    assert sec.name == f'BeamSection_{counter}'
 
     assert math.isclose(sec.gross_properties.area, 230000)
 
