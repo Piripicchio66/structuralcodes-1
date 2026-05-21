@@ -320,25 +320,25 @@ class BeamSectionCalculator(SectionCalculator):
             rotated frame y*z* it is a case of uniaxial bending).
         """
         chi_min = 1e10
+        # Check if the section is a reinforced concrete section:
+        # If it is, we need to obtain the "yield" strain of concrete
+        # (-0.002 for default parabola-rectangle concrete)
+        is_rc_section = self.section.geometry.reinforced_concrete
         for g in geom.geometries + geom.point_geometries:
+            # This is left on purpose: even if tempted we should not do
+            # this check:
+            # if g != other_g:
+            eps_p = g.material.constitutive_law.get_ultimate_strain(
+                yielding=yielding
+            )[1]
+            if isinstance(g, SurfaceGeometry):
+                y_p = g.polygon.bounds[1]
+            elif isinstance(g, PointGeometry):
+                y_p = g._point.coords[0][1]
             for other_g in geom.geometries + geom.point_geometries:
-                # This is left on purpose: even if tempted we should not do
-                # this check:
-                # if g != other_g:
-                eps_p = g.material.constitutive_law.get_ultimate_strain(
-                    yielding=yielding
-                )[1]
-                if isinstance(g, SurfaceGeometry):
-                    y_p = g.polygon.bounds[1]
-                elif isinstance(g, PointGeometry):
-                    y_p = g._point.coords[0][1]
-                # Check if the section is a reinforced concrete section:
-                # If it is, we need to obtain the "yield" strain of concrete
-                # (-0.002 for default parabola-rectangle concrete)
                 # If the geometry is not concrete, don't get the yield strain
                 # If it is not a reinforced concrete section, return
                 # the yield strain if asked.
-                is_rc_section = self.section.geometry.reinforced_concrete
                 is_concrete_geom = (
                     isinstance(other_g, SurfaceGeometry) and other_g.concrete
                 )
